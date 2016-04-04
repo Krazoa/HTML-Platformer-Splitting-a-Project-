@@ -40,12 +40,56 @@ var fps = 0;
 var fpsCount = 0;
 var fpsTime = 0;
 
+//number of layers
+var LAYER_COUNT = 3;
+//level dimentions in tiles
+var MAP = {tw: 60, th: 15};
+//dimentions of a tile (in pixles)
+var TILE = 35;
+//width and high of a tile in the tileset
+var TILESET_TILE = TILE * 2;
+//pixles between the image boarder and the tile images in the tile map
+var TILESET_PADDING = 2;
+//spacing width between each tile in the tileset
+var TILESET_SPACING = 2;
+//how many coloumns of image tiles 
+var TILESET_COUNT_X = 14;
+//how many rows of image tiles
+var TILESET_COUNT_Y = 14;
+
 // load an image to draw
 var chuckNorris = document.createElement("img");
 chuckNorris.src = "hero.png";
 
 var player = new Player();
 var keyboard = new Keyboard();
+
+var tileset = document.createElement("img");
+tileset.src = "tileset.png";
+
+function drawMap()
+{
+    for(var layerldx=0; layerldx<LAYER_COUNT; layerldx++)
+    {
+        var idx = 0;
+        for(var y = 0; y<level1.layers[layerldx].height; y++)
+        {
+            for(var x = 0; x<level1.layers[layerldx].width; x++)
+            {
+                if(level1.layers[layerldx].data[idx] !=0 )
+                {
+                    //1 = tile, 0 = no tile
+                    var tileIndex = level1.layers[layerldx].data[idx] - 1;
+                    var sx = TILESET_PADDING + (tileIndex%TILESET_COUNT_X) * (TILESET_TILE + TILESET_SPACING);
+                    var sy = TILESET_PADDING + (Math.floor(tileIndex/TILESET_COUNT_Y)) * (TILESET_TILE + TILESET_SPACING);
+                    context.drawImage(tileset, sx, sy, TILESET_TILE, TILESET_TILE, x*TILE, (y - 1)*TILESET_TILE, TILESET_TILE, TILESET_TILE);
+                }
+                idx++;
+            }
+        }
+    }
+}
+
 
 function run()
 {
@@ -56,9 +100,7 @@ function run()
     
     player.update(deltaTime);
     player.draw();
-	
-	context.drawImage(chuckNorris, SCREEN_WIDTH/2 - chuckNorris.width/2, SCREEN_HEIGHT/2 - chuckNorris.height/2);
-	
+    // drawMap();
 		
 	// update the frame counter 
 	fpsTime += deltaTime;

@@ -13,6 +13,7 @@ var Player = function()
     this.velocityY = 0;
     this.angularVelocity = 0;
     this.rotation = 0;
+    this.speed = 2;
     this.image.src = "hero.png";
 };
 
@@ -28,6 +29,16 @@ Player.prototype.update = function(deltaTime)
     else
     {
         this.rotation += deltaTime;    
+    }
+    if( typeof(this.x) == "undefined")
+        this.x = 0;
+    if(keyboard.isKeyDown(keyboard.KEY_RIGHT) == true)
+    {
+        this.velocityX = 4;
+    }
+    else
+    {
+        this.velocityX = 0;
     }
 }
 
