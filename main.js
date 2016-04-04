@@ -41,9 +41,9 @@ var fpsCount = 0;
 var fpsTime = 0;
 
 //number of layers
-var LAYER_COUNT = 3;
+var LAYER_COUNT = 2;
 //level dimentions in tiles
-var MAP = {tw: 60, th: 15};
+var MAP = {tw: 20, th: 15};
 //dimentions of a tile (in pixles)
 var TILE = 35;
 //width and high of a tile in the tileset
@@ -100,7 +100,7 @@ function run()
     
     player.update(deltaTime);
     player.draw();
-    // drawMap();
+    drawMap();
 		
 	// update the frame counter 
 	fpsTime += deltaTime;
