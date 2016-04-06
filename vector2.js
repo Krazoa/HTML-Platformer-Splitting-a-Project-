@@ -6,7 +6,7 @@
 // · set (x, y) - pass in an x and a y argument to allow setting both 
 // properties at the same time(DONE)
 
-// · normalize() - normalizes the vector
+// · normalize() - normalizes the vector(Done?)
 
 // · add(v2) - add the input 2D vector to this vector
 
@@ -24,18 +24,25 @@
 // enemy dies).
 
 //initilising vector 2
-var Vector2 = function()
+function set_vector(x, y)
 {
-    this.x = 0;
-    this.y = 0;
-};
-
-Vector.prototype.playerVector2 = function()
-{
+    var Vector2 = {
+    x = 0,
+    y = 0,
+    normaliseX = 0,
+    normaliseY = 0
+    };  
+    //Normalising the direction
+    var length = Math.sqrt(x*x + y*y);
+    normaliseX = x / length
+    normaliseY = y / length
     
+    var VelX = normaliseX * Player.speed
+    var VelY = normaliseY * Player.speed
+    
+    Player.x = Player.x + VelX
+    Player.y = Player.y + VelY
 }
-
-//normalize it here
 //then add or subtract input
 //then times this according to the preset player speed (deltatime should be somewhere here)
 

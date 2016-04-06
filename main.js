@@ -43,7 +43,7 @@ var fpsTime = 0;
 //number of layers
 var LAYER_COUNT = 3;
 //level dimentions in tiles
-var MAP = {tw: 60, th: 15};
+var MAP = {tw: 20, th: 15};
 //dimentions of a tile (in pixles)
 var TILE = 35;
 //width and high of a tile in the tileset
@@ -69,17 +69,20 @@ tileset.src = "tileset.png";
 
 function drawMap()
 {
-    for(var layerldx=0; layerldx<LAYER_COUNT; layerldx++)
+    for(var layeridx=0; layeridx<LAYER_COUNT; layeridx++)
     {
         var idx = 0;
-        for(var y = 0; y<level1.layers[layerldx].height; y++)
+        //for each y layer, if y is less than total y layers then plus 1 to y
+        for(var y = 0; y<level1.layers[layeridx].height; y++)
         {
-            for(var x = 0; x<level1.layers[layerldx].width; x++)
+            //for each x layer, if y is less than total x layers then plus 1 to x
+            for(var x = 0; x<level1.layers[layeridx].width; x++)
             {
-                if(level1.layers[layerldx].data[idx] !=0 )
+                //do check
+                if(level1.layers[layeridx].data[idx] !=0 )
                 {
                     //1 = tile, 0 = no tile
-                    var tileIndex = level1.layers[layerldx].data[idx] - 1;
+                    var tileIndex = level1.layers[layeridx].data[idx] - 1;
                     var sx = TILESET_PADDING + (tileIndex%TILESET_COUNT_X) * (TILESET_TILE + TILESET_SPACING);
                     var sy = TILESET_PADDING + (Math.floor(tileIndex/TILESET_COUNT_Y)) * (TILESET_TILE + TILESET_SPACING);
                     context.drawImage(tileset, sx, sy, TILESET_TILE, TILESET_TILE, x*TILE, (y - 1)*TILE, TILESET_TILE, TILESET_TILE);
