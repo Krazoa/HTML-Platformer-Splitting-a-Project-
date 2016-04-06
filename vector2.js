@@ -24,24 +24,26 @@
 // enemy dies).
 
 //initilising vector 2
-function set_vector(x, y)
+function vector2(posX, posY, speed)
 {
     var Vector2 = {
-    x = 0,
-    y = 0,
-    normaliseX = 0,
-    normaliseY = 0
+    x:  poxX,
+    y: posY,
+    vector_speed: speed,
+    normaliseX: 0,
+    normaliseY: 0
     };  
     //Normalising the direction
     var length = Math.sqrt(x*x + y*y);
     normaliseX = x / length
     normaliseY = y / length
     
-    var VelX = normaliseX * Player.speed
-    var VelY = normaliseY * Player.speed
+    var VelX = normaliseX * vector_speed
+    var VelY = normaliseY * vector_speed
     
-    Player.x = Player.x + VelX
-    Player.y = Player.y + VelY
+    //re-assign VelX and VelY to the x and y respectivly and then ditch it back into the x and y co-ord of whatever is using vector2
+    
+    return vector2();
 }
 //then add or subtract input
 //then times this according to the preset player speed (deltatime should be somewhere here)

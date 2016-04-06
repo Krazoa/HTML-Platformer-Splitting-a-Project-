@@ -9,8 +9,6 @@ var Player = function()
     this.y = canvas.height/2;
     this.width = 159;
     this.height = 163;
-    this.velocityX = 0;
-    this.velocityY = 0;
     this.angularVelocity = 0;
     this.rotation = 0;
     this.speed = 2;
@@ -34,11 +32,13 @@ Player.prototype.update = function(deltaTime)
         this.x = 0;
     if(keyboard.isKeyDown(keyboard.KEY_RIGHT) == true)
     {
-        this.velocityX = 4;
+        // this.x = vector2.vector2(this.x, this.speed)
+        this.x = this.x + 1
     }
     else
     {
-        this.velocityX = 0;
+        // this.x = vector2.vector2(this.x, this.speed)
+        this.x = this.x - 1
     }
 }
 
