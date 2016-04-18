@@ -76,9 +76,6 @@ var TILESET_COUNT_X = 14;
 //how many rows of image tiles
 var TILESET_COUNT_Y = 14;
 
-//Creating a cells array
-var cells = [];
-
 // load an image to draw
 var chuckNorris = document.createElement("img");
 chuckNorris.src = "hero.png";
@@ -182,18 +179,20 @@ function run()
 	context.fillText("FPS: " + fps, 5, 20, 100);
 }
 
+//Creating a cells array
+var cells = [];
 function initialize()
 {
     for(var layeridx = 0; layeridx < LAYER_COUNT; layeridx++)
     {
         cells[layeridx] = [];
-        var idx = 0;
+        var Idx = 0;
         for(var y = 0; y < level1.layers[layeridx].width; y++)
         {
             cells[layeridx][y] = [];
-            for(var x = 0; x <level1.layers[layeridx].width; x++)
+            for(var x = 0; x < level1.layers[layeridx].height; x++)
             {
-                if(level1.layers[layeridx].data[idx] !=0)
+                if(level1.layers[layeridx].data[Idx] !=0)
                 {
                     cells[layeridx][y][x] = 1; //create collision on cell which the player is colliding with
                     cells[layeridx][y-1][x] = 1; //create collision with the cell below colliding cell
@@ -205,7 +204,7 @@ function initialize()
                     // if there is no collision calculated and cell has not been given a value, set it to 0 (no collision)
                     cells[layeridx][y][x] = 0;
                 }
-                idx++
+                Idx++;
             }
         }
     }
