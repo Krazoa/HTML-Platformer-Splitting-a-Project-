@@ -40,8 +40,27 @@ var fps = 0;
 var fpsCount = 0;
 var fpsTime = 0;
 
+//D = delta/displacement (change in somthing)
+//setting distance mesurments
+var METRE = TILE; // every one tile equals 1m
+//setting gravity at which the player will fall at
+var GRAVITY = METRE * 9.8 * 6;
+//max player horizontal speed (max of 10m (10 tiles) per second)
+var MAXDX = METRE * 10;
+//max player vertial speed (max of 15m (15 tiles) per second)
+var MAXDY = METRE * 15;
+//horizontal acceleration per metre (force at which the player gains velocity at)
+var ACCEL = MAXDX * 2;
+//horizontal friction per metre (force at which the player slowly stops at)
+var FRICTION = MAXDX * 6;
+//jump distance at which the player jumps at (bunny hopping??)
+var JUMP = METRE * 1500;
 //number of layers
 var LAYER_COUNT = 3;
+//setting variable values to each collision state
+var LAYER_BACKGROUND = 0; //0 = no collision
+var LAYER_PLATFORMS = 1; //1 = collision with a platform
+var LAYER_LADDERS = 2; //2 = collision with a ladder
 //level dimentions in tiles
 var MAP = {tw: 20, th: 15};
 //dimentions of a tile (in pixles)
@@ -57,6 +76,9 @@ var TILESET_COUNT_X = 14;
 //how many rows of image tiles
 var TILESET_COUNT_Y = 14;
 
+//Creating a cells array
+var cells = [];
+
 // load an image to draw
 var chuckNorris = document.createElement("img");
 chuckNorris.src = "hero.png";
@@ -66,6 +88,45 @@ var keyboard = new Keyboard();
 
 var tileset = document.createElement("img");
 tileset.src = "tileset.png";
+
+function cellAtPixelCoord(layer, x,y)
+{
+    if(x<0 || x>SCREEN_WIDTH)
+        return 1;
+        //let the player drop
+    else if(y>SCREEN_HEIGHT)
+        return 0;
+    return cellAtTileCoord(layer, p2t(x), p2t(y));
+};
+
+function cellAtTileCoord(layer, tx, ty)
+{
+    if(tx<0 || tx>MAP.tw || ty<0)
+        return 1;
+        //let the player drop
+    else if(ty>MAP.th)
+        return 0;
+        return cells[layer][ty][tx];
+}
+
+function tileToPixle(tile)
+{
+    return tile *TILE;
+};
+
+function pixleToTile(pixle)
+{
+    return Math.floor(pixle/TILE);
+};
+
+function bound(value, min, max)
+{
+    if(value < min)
+        return min;
+    if(value > max)
+        return max;
+    return value;
+}
 
 function drawMap()
 {
@@ -121,6 +182,36 @@ function run()
 	context.fillText("FPS: " + fps, 5, 20, 100);
 }
 
+function initialize()
+{
+    for(var layeridx = 0; layeridx < LAYER_COUNT; layeridx++)
+    {
+        cells[layeridx] = [];
+        var idx = 0;
+        for(var y = 0; y < level1.layers[layeridx].width; y++)
+        {
+            cells[layeridx][y] = [];
+            for(var x = 0; x <level1.layers[layeridx].width; x++)
+            {
+                if(level1.layers[layeridx].data[idx] !=0)
+                {
+                    cells[layeridx][y][x] = 1; //create collision on cell which the player is colliding with
+                    cells[layeridx][y-1][x] = 1; //create collision with the cell below colliding cell
+                    cells[layeridx][y-1][x+1] = 1; //create collision with cell below, right with the colliding cell
+                    cells[layeridx][y][x+1] = 1; //create collision with one cell to the right cell which the player is colliding with
+                }
+                else if(cells[layeridx][y][x] != 1)
+                {
+                    // if there is no collision calculated and cell has not been given a value, set it to 0 (no collision)
+                    cells[layeridx][y][x] = 0;
+                }
+                idx++
+            }
+        }
+    }
+}
+
+initialize();
 
 //-------------------- Don't modify anything below here
 

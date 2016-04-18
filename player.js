@@ -5,13 +5,13 @@ var context = canvas.getContext("2d");
 var Player = function()
 {
     this.image = document.createElement("img");
-    this.x = canvas.width/2;
-    this.y = canvas.height/2;
+    this.x = position
+    this.y = position
     this.width = 159;
     this.height = 163;
     this.angularVelocity = 0;
     this.rotation = 0;
-    this.speed = 2;
+    this.velocity = 0;
     this.image.src = "hero.png";
 };
 
@@ -40,6 +40,22 @@ Player.prototype.update = function(deltaTime)
         // this.x = vector2.vector2(this.x, this.speed)
         this.x = this.x - 1
     }
+}
+
+Player.prototype.update = function(deltaTime)
+{
+    //calculate position and velocity
+    this.position.y = Math.floor(this.position.y + (deltaTime * this.velocity.y));
+    this.position.x = Math.floor(this.position.x + (deltaTime * this.velocity.x));
+
+    var tx = pixelToTile(this.position.x);
+    var ty = pixleToTile(this.position.y);
+    var nx = (this.position.x)%TILE;
+    var ny = (this.position.y)%TILE;
+    var cell = cellAtTileCoord(LAYER_PLATFORMS, tx, ty);
+    var cellright = cellAtTileCoord(LAYER_PLATFORMS, tx + 1, ty);
+    var celldown = cellAtTileCoord(LAYER_PLATFORMS, TX, TY + 1);
+    var celldiag = cellAtTileCoord(LAYER_PLATFORMS, tx + 1, ty + 1);
 }
 
 Player.prototype.draw = function()
