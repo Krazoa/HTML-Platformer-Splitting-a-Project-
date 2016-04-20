@@ -5,12 +5,12 @@ var context = canvas.getContext("2d");
 var Player = function()
 {
     this.image = document.createElement("img");
-    this.x = canvas.width/2;
-    this.y = canvas.height/2;
+    // this.x = canvas.width/2;
+    // this.y = canvas.height/2;
     
     
     
-    this.position = new Vector2(this.x, this.y);
+    this.position = new Vector2(canvas.width/2, canvas.height/2);
     this.position.set = (9*TILE, 9*TILE);
     
     this.width = 159;
@@ -85,13 +85,15 @@ Player.prototype.update = function(deltaTime)
     }
     
     //calculate position and velocity
-    this.position.y = Math.floor(this.position.y + (deltaTime * this.velocity.y));
-    this.position.x = Math.floor(this.position.x + (deltaTime * this.velocity.x));
+    // this.position.y = Math.floor(this.position.y + (deltaTime * this.velocity.y));
+    // this.position.x = Math.floor(this.position.x + (deltaTime * this.velocity.x));
 
-    var tx = pixelToTile(this.position.x);
+    var tx = pixleToTile(this.position.x);
     var ty = pixleToTile(this.position.y);
+    
     var nx = (this.position.x)%TILE;
     var ny = (this.position.y)%TILE;
+    
     var cell = cellAtTileCoord(LAYER_PLATFORMS, tx, ty);
     var cellright = cellAtTileCoord(LAYER_PLATFORMS, tx + 1, ty);
     var celldown = cellAtTileCoord(LAYER_PLATFORMS, tX, tY + 1);
@@ -120,7 +122,7 @@ Player.prototype.update = function(deltaTime)
                ny = 0;
            } 
         }
-        if(this.velocity > 0)
+        if(this.velocity.x > 0)
         {
             if((cellright && !cell) || (celldiag && !celldown && ny))
             {
@@ -143,7 +145,7 @@ Player.prototype.update = function(deltaTime)
 Player.prototype.draw = function()
 {
     context.save();
-        context.translate(this.x, this.y);
+        context.translate(this.position.x, this.position.y);
         context.rotate(this.rotation);
         context.drawImage(this.image, -this.width/2, -this.height/2);
     context.restore();

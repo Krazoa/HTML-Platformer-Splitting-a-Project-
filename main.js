@@ -86,35 +86,6 @@ var keyboard = new Keyboard();
 var tileset = document.createElement("img");
 tileset.src = "tileset.png";
 
-function cellAtPixelCoord(layer, x,y)
-{
-    if(x<0 || x>SCREEN_WIDTH)
-        return 1;
-        //let the player drop
-    else if(y>SCREEN_HEIGHT)
-        return 0;
-    return cellAtTileCoord(layer, p2t(x), p2t(y));
-};
-
-function cellAtTileCoord(layer, tx, ty)
-{
-    if(tx<0 || tx>MAP.tw || ty<0)
-        return 1;
-        //let the player drop
-    else if(ty>MAP.th)
-        return 0;
-        return cells[layer][ty][tx];
-}
-
-function tileToPixle(tile)
-{
-    return tile *TILE;
-};
-
-function pixleToTile(pixle)
-{
-    return Math.floor(pixle/TILE);
-};
 
 function bound(value, min, max)
 {
@@ -123,13 +94,43 @@ function bound(value, min, max)
     if(value > max)
         return max;
     return value;
-}
+};
+
+function cellAtPixelCoord(layer, x,y)
+{
+    if(x<0 || x>SCREEN_WIDTH || y<0)
+        return 1;
+        //let the player drop
+    else if(y > SCREEN_HEIGHT)
+        return 0;
+    return cellAtTileCoord(layer, p2t(x), p2t(y));
+};
+
+function cellAtTileCoord(layer, tx, ty)
+{
+    if(tx<0 || tx>=MAP.tw || ty<0)
+        return 1;
+        //let the player drop
+    else if(ty>=MAP.th)
+        return 0;
+    return cells[layer][tx][ty];
+};
+
+function tileToPixle(tile)
+{
+    return tile * TILE;
+};
+
+function pixleToTile(pixle)
+{
+    return Math.floor(pixle/TILE);
+};
 
 function drawMap()
 {
     for(var layeridx=0; layeridx<LAYER_COUNT; layeridx++)
     {
-        var idx = 0;
+        var Idx = 0;
         //for each y layer, if y is less than total y layers then plus 1 to y
         for(var y = 0; y<level1.layers[layeridx].height; y++)
         {
@@ -137,15 +138,15 @@ function drawMap()
             for(var x = 0; x<level1.layers[layeridx].width; x++)
             {
                 //do check
-                if(level1.layers[layeridx].data[idx] !=0 )
+                if(level1.layers[layeridx].data[Idx] !=0 )
                 {
                     //1 = tile, 0 = no tile
-                    var tileIndex = level1.layers[layeridx].data[idx] - 1;
+                    var tileIndex = level1.layers[layeridx].data[Idx] - 1;
                     var sx = TILESET_PADDING + (tileIndex%TILESET_COUNT_X) * (TILESET_TILE + TILESET_SPACING);
                     var sy = TILESET_PADDING + (Math.floor(tileIndex/TILESET_COUNT_Y)) * (TILESET_TILE + TILESET_SPACING);
                     context.drawImage(tileset, sx, sy, TILESET_TILE, TILESET_TILE, x*TILE, (y - 1)*TILE, TILESET_TILE, TILESET_TILE);
                 }
-                idx++;
+                Idx++;
             }
         }
     }
