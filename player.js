@@ -11,7 +11,7 @@ var Player = function()
     
     
     this.position = new Vector2(canvas.width/2, canvas.height/2);
-    this.position.set = (9*TILE, 9*TILE);
+    this.position.Set(9*TILE, 0*TILE);
     
     this.width = 159;
     this.height = 163;
@@ -19,9 +19,11 @@ var Player = function()
     // this.angularVelocity = 0;
     // this.rotation = 0;
     this.offset = new Vector2();
-    this.offset.set = (-55,-87);
+    this.offset.Set(-55,-87);
     
     this.velocity = new Vector2();
+    this.velocity.x = 0;
+    this.velocity.y = 0;
     
     this.falling = true;
     this.jumping = false;
@@ -74,7 +76,7 @@ Player.prototype.update = function(deltaTime)
     
     //find players new position and velocity
     this.position.y = Math.floor(this.position.y + (deltaTime * this.velocity.y));
-    this.position.x = Math.floor(this.position.x + (deltaTime * this.velocity.y));
+    this.position.x = Math.floor(this.position.x + (deltaTime * this.velocity.x));
     this.velocity.y = bound(this.velocity.y + (deltaTime * ddy), -MAXDY, MAXDY);
     this.velocity.x = bound(this.velocity.x + (deltaTime * ddx), -MAXDX, MAXDX);
     
@@ -96,7 +98,7 @@ Player.prototype.update = function(deltaTime)
     
     var cell = cellAtTileCoord(LAYER_PLATFORMS, tx, ty);
     var cellright = cellAtTileCoord(LAYER_PLATFORMS, tx + 1, ty);
-    var celldown = cellAtTileCoord(LAYER_PLATFORMS, tX, tY + 1);
+    var celldown = cellAtTileCoord(LAYER_PLATFORMS, tx, ty + 1);
     var celldiag = cellAtTileCoord(LAYER_PLATFORMS, tx + 1, ty + 1);
 
     if(this.velocity.y > 0)

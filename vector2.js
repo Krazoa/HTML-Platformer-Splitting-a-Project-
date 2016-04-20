@@ -5,6 +5,12 @@ var Vector2 =  function vector2(posX, posY)
     this.y = posY;
 }
 
+Vector2.prototype.Set = function(posX, posY)
+{
+    this.x = posX;
+    this.y = posY;
+}
+
 Vector2.prototype.Magnitude = function() //a.k.a length
 {
     var mag = this.x * this*x + this.y * this.y;
