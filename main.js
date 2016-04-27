@@ -62,17 +62,17 @@ function bound(value, min, max)
 
 function cellAtPixelCoord(layer, x,y)
 {
-    if(x<0 || x>SCREEN_WIDTH || y<0)
+    if(x<0 || x>SCREEN_WIDTH)
         return 1;
         //let the player drop
-    else if(y > SCREEN_HEIGHT)
+    else if(y>SCREEN_HEIGHT)
         return 0;
     return cellAtTileCoord(layer, p2t(x), p2t(y));
 };
 
 function cellAtTileCoord(layer, tx, ty)
 {
-    if(tx<0 || tx>=MAP.tw || ty<0)
+    if(tx<0 || tx>=MAP.tw)
         return 1;
         //let the player drop
     else if(ty>=MAP.th)
@@ -116,34 +116,6 @@ function drawMap()
     }
 }
 
-
-function run()
-{
-	context.fillStyle = "#ccc";		
-	context.fillRect(0, 0, canvas.width, canvas.height);
-	
-	var deltaTime = getDeltaTime();
-    
-    player.update(deltaTime);
-    player.draw();
-    drawMap();
-		
-	// update the frame counter 
-	fpsTime += deltaTime;
-	fpsCount++;
-	if(fpsTime >= 1)
-	{
-		fpsTime -= 1;
-		fps = fpsCount;
-		fpsCount = 0;
-	}		
-		
-	// draw the FPS
-	context.fillStyle = "#f00";
-	context.font="14px Arial";
-	context.fillText("FPS: " + fps, 5, 20, 100);
-}
-
 //Creating a cells array
 var cells = [];
 function initialize()
@@ -174,6 +146,43 @@ function initialize()
         }
     }
 }
+
+function run()
+{
+	context.fillStyle = "#ccc";		
+	context.fillRect(0, 0, canvas.width, canvas.height);
+	
+	var deltaTime = getDeltaTime();
+    
+    player.update(deltaTime);
+    player.draw();
+    drawMap();
+		
+	// update the frame counter 
+	fpsTime += deltaTime;
+	fpsCount++;
+	if(fpsTime >= 1)
+	{
+		fpsTime -= 1;
+		fps = fpsCount;
+		fpsCount = 0;
+	}		
+		
+	// draw the FPS
+	context.fillStyle = "#f00";
+	context.font="14px Arial";
+	context.fillText("FPS: " + fps, 5, 20, 100);
+    
+    // console.log(player.velocity.y);
+    // console.log(player.celldown);
+    console.log(player.tx);
+    // console.log(player.ty);
+    // console.log(player.position);
+    // console.log(player.position.x);
+    // console.log(player.position.y);
+    
+}
+
 
 initialize();
 
