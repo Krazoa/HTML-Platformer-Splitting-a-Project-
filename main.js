@@ -147,6 +147,17 @@ function initialize()
     }
 }
 
+function DrawLevelCollisionData(tileLayer, colour) {
+    for (var y = 0; y < level1.layers[tileLayer].height; y++) {
+        for (var x = 0; x < level1.layers[tileLayer].width; x++) {
+            if (cells[tileLayer][y][x] == 1) {
+                context.fillStyle = "#F00";
+                context.fillRect(TILE * x, TILE * y, TILE, TILE);
+            }
+        }
+    }
+}
+
 function run()
 {
 	context.fillStyle = "#ccc";		
@@ -157,6 +168,8 @@ function run()
     player.update(deltaTime);
     player.draw();
     drawMap();
+    
+    // DrawLevelCollisionData(, #FFFFFF);
 		
 	// update the frame counter 
 	fpsTime += deltaTime;
@@ -175,7 +188,7 @@ function run()
     
     // console.log(player.velocity.y);
     // console.log(player.celldown);
-    console.log(player.tx);
+    // console.log(player.tx);
     // console.log(player.ty);
     // console.log(player.position);
     // console.log(player.position.x);

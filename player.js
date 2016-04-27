@@ -171,6 +171,8 @@ Player.prototype.update = function(deltaTime)
 
     var tx = pixleToTile(this.position.x);
     var ty = pixleToTile(this.position.y);
+    console.log(tx);
+    
     
     var nx = (this.position.x)%TILE;
     var ny = (this.position.y)%TILE;
