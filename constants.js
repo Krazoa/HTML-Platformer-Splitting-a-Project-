@@ -33,3 +33,16 @@ var LAYER_PLATFORMS = 1; //1 = collision with a platform
 var LAYER_LADDERS = 2; //2 = collision with a ladder
 //level dimentions in tiles
 var MAP = {tw: 20, th: 15};
+//Game States
+var Game_splash = 0;
+var Game_play = 1;
+var Game_over = 2;
+var Game_reset = 3;
+//Defult Start Game State
+var Gamestate = Game_splash;
+//Reset Timer
+var reset_timer = 3;
+//Score counter
+var score = 0;
+//Setting player life
+var lives = 3;

@@ -67,29 +67,29 @@ Player.prototype.update = function(deltaTime)
     var jump = false;
     
     //check keypresses
-    if(keyboard.isKeyDown(keyboard.KEY_LEFT) == false)
+    if(keyboard.isKeyDown(keyboard.KEY_LEFT) == true)
     {
         console.log("Left had been triggered!")
-        left = false;
+        left = true;
         this.direction = LEFT;
-        if(this.sprite.currentAnimation != ANIM_WALK_LEFT)
+        if(this.sprite.currentAnimation != ANIM_WALK_LEFT && this.jumping == false)
         {
             this.sprite.setAnimation(ANIM_WALK_LEFT);
         }
     }
-    else if(keyboard.isKeyDown(keyboard.KEY_RIGHT) == false)
+    else if(keyboard.isKeyDown(keyboard.KEY_RIGHT) == true)
     {
         console.log("Right had been triggered!")
-        right = false;
+        right = true;
         this.direction = RIGHT;
-        if(this.sprite.currentAnimation != ANIM_WALK_RIGHT)
+        if(this.sprite.currentAnimation != ANIM_WALK_RIGHT && this.jumping == false)
         {
             this.sprite.setAnimation(ANIM_WALK_RIGHT);
         }
     }
     else
     {
-        if(this.jumping == false && this.falling == false)
+        if(this.jumping == false && this.falling == true)
         {
             if(this.direction == LEFT)
             {
@@ -171,7 +171,7 @@ Player.prototype.update = function(deltaTime)
 
     var tx = pixleToTile(this.position.x);
     var ty = pixleToTile(this.position.y);
-    console.log(tx);
+    // console.log(tx);
     
     
     var nx = (this.position.x)%TILE;

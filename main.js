@@ -90,6 +90,23 @@ function pixleToTile(pixle)
     return Math.floor(pixle/TILE);
 };
 
+function runGame_splash(deltaTime)
+{
+    reset_timer -=deltaTime
+}
+function runGame_play(deltaTime)
+{
+    
+}
+function runGame_over(deltaTime)
+{
+    
+}
+function runGame_reset(deltaTime)
+{
+    
+}
+
 function drawMap()
 {
     for(var layeridx=0; layeridx<LAYER_COUNT; layeridx++)
@@ -124,10 +141,10 @@ function initialize()
     {
         cells[layeridx] = [];
         var Idx = 0;
-        for(var y = 0; y < level1.layers[layeridx].width; y++)
+        for(var y = 0; y < level1.layers[layeridx].height; y++)
         {
             cells[layeridx][y] = [];
-            for(var x = 0; x < level1.layers[layeridx].height; x++)
+            for(var x = 0; x < level1.layers[layeridx].width; x++)
             {
                 if(level1.layers[layeridx].data[Idx] !=0)
                 {
@@ -151,7 +168,7 @@ function DrawLevelCollisionData(tileLayer, colour) {
     for (var y = 0; y < level1.layers[tileLayer].height; y++) {
         for (var x = 0; x < level1.layers[tileLayer].width; x++) {
             if (cells[tileLayer][y][x] == 1) {
-                context.fillStyle = "#F00";
+                context.fillStyle = colour;
                 context.fillRect(TILE * x, TILE * y, TILE, TILE);
             }
         }
@@ -169,8 +186,14 @@ function run()
     player.draw();
     drawMap();
     
-    // DrawLevelCollisionData(, #FFFFFF);
+    // Debug Collision Layer Checks
+    // DrawLevelCollisionData(0, "#00ff00");
+    DrawLevelCollisionData(1, "#0000ff");
+    // DrawLevelCollisionData(2, "#ff0000");
 		
+    // Draw the GUI
+    // GUI.DrawScore();
+        
 	// update the frame counter 
 	fpsTime += deltaTime;
 	fpsCount++;
@@ -186,6 +209,24 @@ function run()
 	context.font="14px Arial";
 	context.fillText("FPS: " + fps, 5, 20, 100);
     
+    //Game State Manager
+    // switch(Gamestate)
+    // {
+    //     case Game_splash:
+    //         runGame_splash(deltaTime);
+    //         break;
+    //     case Game_play:
+    //         runGame_play(deltaTime);
+    //         break;
+    //     case Game_over:
+    //         runGame_over(deltaTime);
+    //         break;
+    //     case Game_reset:
+    //         runGame_reset(deltaTime);
+    //         break;
+    // }
+    
+    //Debug Console Logs
     // console.log(player.velocity.y);
     // console.log(player.celldown);
     // console.log(player.tx);
