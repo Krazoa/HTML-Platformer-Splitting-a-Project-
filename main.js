@@ -62,7 +62,7 @@ function bound(value, min, max)
 
 function cellAtPixelCoord(layer, x,y)
 {
-    if(x<0 || x>SCREEN_WIDTH)
+    if(x<0 || x>SCREEN_WIDTH || y<0)
         return 1;
         //let the player drop
     else if(y>SCREEN_HEIGHT)
@@ -72,7 +72,7 @@ function cellAtPixelCoord(layer, x,y)
 
 function cellAtTileCoord(layer, tx, ty)
 {
-    if(tx<0 || tx>=MAP.tw)
+    if(tx<0 || tx>=MAP.tw || ty<0)
         return 1;
         //let the player drop
     else if(ty>=MAP.th)
@@ -90,9 +90,20 @@ function pixleToTile(pixle)
     return Math.floor(pixle/TILE);
 };
 
+//GameStates
 function runGame_splash(deltaTime)
 {
-    reset_timer -=deltaTime
+    Splash_timer -=deltaTime
+    
+    //Setting name
+    context.fillStyle = "#ffffff";
+    context.font= "9.1px Arial";
+    context.fillText("AIE Project by Michele A.", 2, screen_height - 2)
+    
+    if(Splash_timer <= 0)
+    {
+        Gamestate = Game_play
+    }
 }
 function runGame_play(deltaTime)
 {
@@ -204,20 +215,20 @@ function run()
 	context.font="14px Arial";
 	context.fillText("FPS: " + fps, 5, 20, 100);
     
-    //Game State Manager
+    // Game State Manager
     // switch(Gamestate)
     // {
     //     case Game_splash:
-    //         runGame_splash(deltaTime);
+    //         runGamestate_splash(deltaTime);
     //         break;
     //     case Game_play:
-    //         runGame_play(deltaTime);
+    //         runGamestate_play(deltaTime);
     //         break;
-    //     case Game_over:
-    //         runGame_over(deltaTime);
+    //     case Gamestate_over:
+    //         runGamestate_over(deltaTime);
     //         break;
     //     case Game_reset:
-    //         runGame_reset(deltaTime);
+    //         runGamestate_reset(deltaTime);
     //         break;
     // }
     
@@ -231,13 +242,13 @@ function run()
     // console.log(player.position.y);
     
     // Debug Collision Layer Checks
-    DrawLevelCollisionData(0, "#00ff00");
-    DrawLevelCollisionData(1, "#0000ff");
-    DrawLevelCollisionData(2, "#ff0000");
+    // DrawLevelCollisionData(0, "#00ff00");
+    // DrawLevelCollisionData(1, "#0000ff");
+    // DrawLevelCollisionData(2, "#ff0000");
 	
     //Debug players collision box
-    context.fillStyle = "#ffffff";
-    context.fillRect(player.position.x, player.position.y, TILE, TILE);
+    // context.fillStyle = "#ffffff";
+    // context.fillRect(player.position.x, player.position.y, TILE, TILE);
     
 }
 

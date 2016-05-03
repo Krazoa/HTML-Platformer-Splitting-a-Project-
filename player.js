@@ -71,7 +71,7 @@ Player.prototype.update = function(deltaTime)
     //check keypresses
     if(keyboard.isKeyDown(keyboard.KEY_LEFT) == true)
     {
-        console.log("Left had been triggered!")
+        // console.log("Left had been triggered!")
         left = true;
         this.direction = LEFT;
         if(this.sprite.currentAnimation != ANIM_WALK_LEFT && this.jumping == false)
@@ -81,7 +81,7 @@ Player.prototype.update = function(deltaTime)
     }
     else if(keyboard.isKeyDown(keyboard.KEY_RIGHT) == true)
     {
-        console.log("Right had been triggered!")
+        // console.log("Right had been triggered!")
         right = true;
         this.direction = RIGHT;
         if(this.sprite.currentAnimation != ANIM_WALK_RIGHT && this.jumping == false)
@@ -91,7 +91,7 @@ Player.prototype.update = function(deltaTime)
     }
     else
     {
-        if(this.jumping == false && this.falling == true)
+        if(this.jumping == false && this.falling == false)
         {
             if(this.direction == LEFT)
             {
@@ -112,7 +112,7 @@ Player.prototype.update = function(deltaTime)
     
     if(keyboard.isKeyDown(keyboard.KEY_SPACE) == true)
     {
-        console.log("Jump had been triggered!")
+        // console.log("Jump had been triggered!")
         jump = true;
         if(left == true)
         {

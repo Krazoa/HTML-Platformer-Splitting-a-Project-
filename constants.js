@@ -34,12 +34,14 @@ var LAYER_LADDERS = 2; //2 = collision with a ladder
 //level dimentions in tiles
 var MAP = {tw: 20, th: 15};
 //Game States
-var Game_splash = 0;
-var Game_play = 1;
-var Game_over = 2;
-var Game_reset = 3;
+var Gamestate_splash = 0;
+var Gamestate_play = 1;
+var Gamestate_over = 2;
+var Gamestate_reset = 3;
 //Defult Start Game State
 var Gamestate = Game_splash;
+//Splash Timer
+var Splash_timer = 3;
 //Reset Timer
 var reset_timer = 3;
 //Score counter
