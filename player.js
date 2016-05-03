@@ -28,13 +28,14 @@ var Player = function()
     this.sprite.buildAnimation(12, 8, 165, 126, 0.05, [65, 66, 67, 68, 69, 71, 72, 73, 74, 75, 76, 77, 78]);
     for(var i=0; i<ANIM_MAX; i++)
     {
-        this.sprite.setAnimationOffset(i, -55, -87);
+        this.sprite.setAnimationOffset(i, -55, -89);
     }
     
     // this.x = canvas.width/2;
     // this.y = canvas.height/2;
     this.position = new Vector2(canvas.width/2, canvas.height/2);
-    this.position.Set(9*TILE, 0*TILE);
+    // this.position.Set(9*TILE, 0*TILE);
+    this.position.Set(200, 0*TILE);
     // this.position.x = 9*TILE
     // this.position.y = 0*TILE
     
@@ -53,7 +54,8 @@ var Player = function()
     this.falling = true;
     this.jumping = false;
     
-    this.direction = LEFT;
+    this.direction = RIGHT;
+    
     
     // this.image.src = "hero.png";
 };
@@ -172,15 +174,15 @@ Player.prototype.update = function(deltaTime)
     var tx = pixleToTile(this.position.x);
     var ty = pixleToTile(this.position.y);
     // console.log(tx);
-    
-    
     var nx = (this.position.x)%TILE;
     var ny = (this.position.y)%TILE;
     
+    // console.log("Cells have been initilized")
     var cell = cellAtTileCoord(LAYER_PLATFORMS, tx, ty);
     var cellright = cellAtTileCoord(LAYER_PLATFORMS, tx + 1, ty);
     var celldown = cellAtTileCoord(LAYER_PLATFORMS, tx, ty + 1);
     var celldiag = cellAtTileCoord(LAYER_PLATFORMS, tx + 1, ty + 1);
+    
 
     if(this.velocity.y > 0)
     {

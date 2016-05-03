@@ -33,5 +33,6 @@ Keyboard.prototype.isKeyUp = function(evt)
 
 Keyboard.prototype.isKeyDown = function(keyCode)
 {
+    // console.log("A Keyboard.isKeyDown function Called")
     return this.keys[keyCode];
 };

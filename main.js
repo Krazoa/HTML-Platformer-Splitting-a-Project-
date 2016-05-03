@@ -77,7 +77,7 @@ function cellAtTileCoord(layer, tx, ty)
         //let the player drop
     else if(ty>=MAP.th)
         return 0;
-    return cells[layer][tx][ty];
+    return cells[layer][ty][tx];
 };
 
 function tileToPixle(tile)
@@ -185,12 +185,7 @@ function run()
     player.update(deltaTime);
     player.draw();
     drawMap();
-    
-    // Debug Collision Layer Checks
-    // DrawLevelCollisionData(0, "#00ff00");
-    DrawLevelCollisionData(1, "#0000ff");
-    // DrawLevelCollisionData(2, "#ff0000");
-		
+        
     // Draw the GUI
     // GUI.DrawScore();
         
@@ -234,6 +229,15 @@ function run()
     // console.log(player.position);
     // console.log(player.position.x);
     // console.log(player.position.y);
+    
+    // Debug Collision Layer Checks
+    DrawLevelCollisionData(0, "#00ff00");
+    DrawLevelCollisionData(1, "#0000ff");
+    DrawLevelCollisionData(2, "#ff0000");
+	
+    //Debug players collision box
+    context.fillStyle = "#ffffff";
+    context.fillRect(player.position.x, player.position.y, TILE, TILE);
     
 }
 
