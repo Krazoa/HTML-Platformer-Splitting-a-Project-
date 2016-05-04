@@ -38,13 +38,21 @@ var Gamestate_splash = 0;
 var Gamestate_play = 1;
 var Gamestate_over = 2;
 var Gamestate_reset = 3;
+var Gamestate_resetvalues = 4;
 //Defult Start Game State
-var Gamestate = Game_splash;
+var Gamestate = Gamestate_splash;
 //Splash Timer
-var Splash_timer = 3;
+var Splash_timer = 2;
 //Reset Timer
 var reset_timer = 3;
 //Score counter
 var score = 0;
 //Setting player life
+var player_hp = 100;
+//Player Lives
 var lives = 3;
+//Misc Key Values
+var Enterstate = false;
+//Debug Key Values
+var Cheat = false;
+var TriggerHurt = false;

@@ -110,7 +110,7 @@ Player.prototype.update = function(deltaTime)
         }    
     }
     
-    if(keyboard.isKeyDown(keyboard.KEY_SPACE) == true)
+    if(keyboard.isKeyDown(keyboard.KEY_SPACE) == true && this.falling == false)
     {
         // console.log("Jump had been triggered!")
         jump = true;

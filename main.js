@@ -91,31 +91,122 @@ function pixleToTile(pixle)
 };
 
 //GameStates
-function runGame_splash(deltaTime)
+function runGamesplash(deltaTime)
 {
     Splash_timer -=deltaTime
     
     //Setting name
     context.fillStyle = "#ffffff";
-    context.font= "9.1px Arial";
-    context.fillText("AIE Project by Michele A.", 2, screen_height - 2)
+    context.font= "12px Arial";
+    context.fillText("AIE Project by Michele A.", 2, SCREEN_HEIGHT - 2)
+    
+    context.fillStyle = "#ffffff";
+    context.font = "25px Arial";
+    context.fillText("Pretend you see a splash image here :)", SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
     
     if(Splash_timer <= 0)
     {
-        Gamestate = Game_play
+        Gamestate = Gamestate_reset;
     }
 }
-function runGame_play(deltaTime)
+function runGameplay(deltaTime)
 {
+    //Debug Keys
+    if(keyboard.isKeyDown(keyboard.KEY_A) == true)
+    {
+        Cheat = true;
+        score += 100;
+        if(Cheat == true)
+        {
+            context.fillStyle = "#ffffff";
+            context.font = "10px Arial";
+            context.fillText("CHEATER!!!", SCREEN_WIDTH - 170, 130)
+        }
+        
+    }
+    else
+    {
+        Cheat = 0;    
+    }
+    if(keyboard.isKeyDown(keyboard.KEY_S) == true)
+    {
+        player_hp -= 1;
+    }
+
+    // KillCounter.draw();
+    DrawScore();
+    DrawHPCounter();
+    player.update(deltaTime);
+    player.draw();
+    DrawLives();
+    drawMap();
+    
+    if(player_hp <= 0)
+    {
+        // console.log(lives)
+        lives -= 1;
+        player_hp = 100;
+        if(lives == 0)
+        {
+            console.log("Chuck Norris is dead...just kidding, Chuck Norris never dies.")
+            Gamestate = Gamestate_over;
+        }
+    }
+}
+function runGamevalreset(deltaTime)
+{
+    //Reset all values
+    score = 0;
+    reset_timer = 3;
+    Cheat = false;
+    player_hp = 100;
+    lives = 3;
+    Gamestate = Gamestate_reset;
     
 }
-function runGame_over(deltaTime)
+function runGameover(deltaTime)
 {
+    Enterstate = false;
+    context.fillStyle = "#ffffff";
+    context.font = "25px Arial";
+    context.fillText("Chuck Norris is dead...just kidding, Chuck Norris never dies.", 100, SCREEN_HEIGHT/2)
     
+    context.fillStyle = "#ffffff";
+    context.font = "24px Arial";
+    context.fillText("Press R to restart.", 100, SCREEN_HEIGHT/2 + 50)
+    if(keyboard.isKeyDown(keyboard.KEY_R) == true)
+    {
+        Gamestate = Gamestate_resetvalues;
+    }
 }
-function runGame_reset(deltaTime)
+function runGamereset(deltaTime)
 {
     
+    context.fillStyle = "#ffffff";
+    context.font = "18px Arial";
+    context.fillText("In the year 30XX, Chuck Norris battle againsed the [Insert Enemy] begins!", 100, 200)
+    
+    //Insert some sort of background here
+    
+    context.fillStyle = "#ffffff";
+    context.font = "25px Arial";
+    context.fillText("Press ENTER to begin", 100, 230)
+    if(keyboard.isKeyDown(keyboard.KEY_ENTER) == true)
+    {
+        Enterstate = true;
+    }
+    if(Enterstate == true)
+    {
+        reset_timer -= deltaTime;
+        context.fillStyle = "#ffffff";
+        context.font = "24px Arial";
+        context.fillText("Prepare for battle in " + reset_timer + " seconds!!!", 100, 300)
+    }
+    if(reset_timer <= 0)
+    {
+        Gamestate = Gamestate_play;
+        Enterstate = 0;
+    }
 }
 
 function drawMap()
@@ -193,9 +284,6 @@ function run()
 	
 	var deltaTime = getDeltaTime();
     
-    player.update(deltaTime);
-    player.draw();
-    drawMap();
         
     // Draw the GUI
     // GUI.DrawScore();
@@ -211,26 +299,29 @@ function run()
 	}		
 		
 	// draw the FPS
-	context.fillStyle = "#f00";
+	context.fillStyle = "#ffffff";
 	context.font="14px Arial";
 	context.fillText("FPS: " + fps, 5, 20, 100);
     
     // Game State Manager
-    // switch(Gamestate)
-    // {
-    //     case Game_splash:
-    //         runGamestate_splash(deltaTime);
-    //         break;
-    //     case Game_play:
-    //         runGamestate_play(deltaTime);
-    //         break;
-    //     case Gamestate_over:
-    //         runGamestate_over(deltaTime);
-    //         break;
-    //     case Game_reset:
-    //         runGamestate_reset(deltaTime);
-    //         break;
-    // }
+    switch(Gamestate)
+    {
+        case Gamestate_splash:
+            runGamesplash(deltaTime);
+            break;
+        case Gamestate_play:
+            runGameplay(deltaTime);
+            break;
+        case Gamestate_over:
+            runGameover(deltaTime);
+            break;
+        case Gamestate_reset:
+            runGamereset(deltaTime);
+            break;
+        case Gamestate_resetvalues:
+            runGamevalreset(deltaTime);
+            break;
+    }
     
     //Debug Console Logs
     // console.log(player.velocity.y);
