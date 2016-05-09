@@ -111,6 +111,16 @@ function runGamesplash(deltaTime)
 }
 function runGameplay(deltaTime)
 {
+    
+    player.update(deltaTime);
+    DrawLives();
+    drawMap();
+    player.draw();
+    DrawScore();
+    DrawHPCounter();
+    // KillCounter.draw();
+    
+    
     //Debug Keys
     if(keyboard.isKeyDown(keyboard.KEY_A) == true)
     {
@@ -132,14 +142,12 @@ function runGameplay(deltaTime)
     {
         player_hp -= 1;
     }
-
-    // KillCounter.draw();
-    DrawScore();
-    DrawHPCounter();
-    player.update(deltaTime);
-    player.draw();
-    DrawLives();
-    drawMap();
+    
+    // //Add enemies
+    // for(var i=0; i<enemies.length; i++)
+    // {
+    //     enemies[i].update(deltaTime);
+    // }
     
     if(player_hp <= 0)
     {
@@ -184,7 +192,7 @@ function runGamereset(deltaTime)
     
     context.fillStyle = "#ffffff";
     context.font = "18px Arial";
-    context.fillText("In the year 30XX, Chuck Norris battle againsed the [Insert Enemy] begins!", 100, 200)
+    context.fillText("In the year 30XX, Chuck Norris battle againsed the bats begins!", 100, 200)
     
     //Insert some sort of background here
     
@@ -211,14 +219,35 @@ function runGamereset(deltaTime)
 
 function drawMap()
 {
+    var startX = -1;
+    var maxTiles = Math.floor(SCREEN_WIDTH / TILE) + 2; //max no. of tiles before scrolling occurs
+    var tileX = pixleToTile(player.position.x); //convert player position on which tile and converts into tile
+    var offsetX = TILE + Math.floor(player.position.x%TILE); //find offset of the player from the tile they stand on
+    
+    //move the map when the player moves too far to the lefr or right.
+    startX = tileX - Math.floor(maxTiles / 2);
+    if(startX < -1)
+    {
+        startX = 0;
+        offsetX = 0;
+    }
+    if(startX > MAP.tw - maxTiles)
+    {
+        startX = MAP.tw - maxTiles + 1;
+        offsetX = TILE;
+    }
+    
+    worldOffsetX = startX * TILE + offsetX;
+    
     for(var layeridx=0; layeridx<LAYER_COUNT; layeridx++)
     {
-        var Idx = 0;
+        // var Idx = 0;
         //for each y layer, if y is less than total y layers then plus 1 to y
         for(var y = 0; y<level1.layers[layeridx].height; y++)
         {
+            var Idx = y * level1.layers[layeridx].width + startX;
             //for each x layer, if y is less than total x layers then plus 1 to x
-            for(var x = 0; x<level1.layers[layeridx].width; x++)
+            for(var x = startX; x < startX + maxTiles; x++)
             {
                 //do check
                 if(level1.layers[layeridx].data[Idx] !=0 )
@@ -227,7 +256,7 @@ function drawMap()
                     var tileIndex = level1.layers[layeridx].data[Idx] - 1;
                     var sx = TILESET_PADDING + (tileIndex%TILESET_COUNT_X) * (TILESET_TILE + TILESET_SPACING);
                     var sy = TILESET_PADDING + (Math.floor(tileIndex/TILESET_COUNT_Y)) * (TILESET_TILE + TILESET_SPACING);
-                    context.drawImage(tileset, sx, sy, TILESET_TILE, TILESET_TILE, x*TILE, (y - 1)*TILE, TILESET_TILE, TILESET_TILE);
+                    context.drawImage(tileset, sx, sy, TILESET_TILE, TILESET_TILE, (x - startX)*TILE - offsetX, (y - 1)*TILE, TILESET_TILE, TILESET_TILE);
                 }
                 Idx++;
             }
@@ -264,6 +293,28 @@ function initialize()
             }
         }
     }
+    
+    // //adding enemies
+    // Idx = 0;
+    // for(var y = 0; y < level1.layers[LAYER_OBJECT_ENEMIES].height; y++)
+    // {
+    //     for(var x = 0; x < level1.layers[LAYER_OBJECT_ENEMIES].width; x++)
+    //     {
+    //         if(level1.layers[LAYER_OBJECT_ENEMIES.data[Idx] != 0)
+    //         {
+    //             var px = tileToPixle(x);
+    //             var py = tileToPixle(y);
+    //             var e = new Enemy(px, py);
+    //             enemies.push(e);
+    //         }
+    //         Idx++;
+    //     }
+    // }
+    
+    musicBackground = new Howl(
+        {
+            
+        });
 }
 
 function DrawLevelCollisionData(tileLayer, colour) {

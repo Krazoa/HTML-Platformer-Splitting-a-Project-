@@ -35,7 +35,7 @@ var Player = function()
     // this.y = canvas.height/2;
     this.position = new Vector2(canvas.width/2, canvas.height/2);
     // this.position.Set(9*TILE, 0*TILE);
-    this.position.Set(200, 0*TILE);
+    this.position.Set(9*TILE, 0*TILE);
     // this.position.x = 9*TILE
     // this.position.y = 0*TILE
     
@@ -235,5 +235,5 @@ Player.prototype.draw = function()
     //     context.drawImage(this.image, -this.width/2, -this.height/2);
     // context.restore();
     
-    this.sprite.draw(context, this.position.x, this.position.y);
+    this.sprite.draw(context, this.position.x - worldOffsetX, this.position.y);
 }

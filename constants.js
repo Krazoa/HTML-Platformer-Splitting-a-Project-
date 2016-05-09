@@ -1,3 +1,6 @@
+var canvas = document.getElementById("gameCanvas");
+var context = canvas.getContext("2d");
+
 //D = delta/displacement (change in somthing)
 //dimentions of a tile (in pixles)
 var TILE = 35;
@@ -31,8 +34,14 @@ var LAYER_COUNT = 3;
 var LAYER_BACKGROUND = 0; //0 = no collision
 var LAYER_PLATFORMS = 1; //1 = collision with a platform
 var LAYER_LADDERS = 2; //2 = collision with a ladder
+var LAYER_OBJECT_ENEMIES = 3; //These two layers are enemy layers. They wont be added to the layer count as they
+var LAYER_OBJECT_TRIGGERS = 4;//both do not contain any collisions and do not get drawn.
 //level dimentions in tiles
-var MAP = {tw: 20, th: 15};
+var MAP = {tw: 60, th: 17};
+//offset X of the world
+var worldOffsetX = 0;
+//starting X position of the map
+var startX = -1
 //Game States
 var Gamestate_splash = 0;
 var Gamestate_play = 1;
@@ -56,3 +65,10 @@ var Enterstate = false;
 //Debug Key Values
 var Cheat = false;
 var TriggerHurt = false;
+//Enemy Variables
+var ENEMY_MAXDX = METRE * 5;
+var ENEMY_ACCEL = ENEMY_MAXDX * 2;
+var enemies = [];   //Array bracket holding all the enemies in the map
+//Music
+var musicBackground;
+var sfxFire;
