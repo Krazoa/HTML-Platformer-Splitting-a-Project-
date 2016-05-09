@@ -72,3 +72,4 @@ var enemies = [];   //Array bracket holding all the enemies in the map
 //Music
 var musicBackground;
 var sfxFire;
+var sfxPlayerDie;

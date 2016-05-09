@@ -156,6 +156,7 @@ function runGameplay(deltaTime)
         player_hp = 100;
         if(lives == 0)
         {
+            sfxPlayerDie.play();
             console.log("Chuck Norris is dead...just kidding, Chuck Norris never dies.")
             Gamestate = Gamestate_over;
         }
@@ -313,8 +314,32 @@ function initialize()
     
     musicBackground = new Howl(
         {
-            
+            urls: ["background.ogg"],
+            loop: true,
+            buffer: true,
+            volume: 0.5
         });
+        
+    sfxFire = new Howl({
+       urls: ["fireEffect.ogg"],
+       buffer: true,
+       volume: 1,
+       onend: function()
+            {
+                isSfxPlaying = false;
+            }
+    });
+    
+    sfxPlayerDie = new Howl({
+        urls: ["death.ogg"],
+        buffer: true,
+        volume: 1, 
+    });
+    
+    // if(Gamestate == 1)
+    // {
+        musicBackground.play();
+    // }
 }
 
 function DrawLevelCollisionData(tileLayer, colour) {
@@ -334,25 +359,21 @@ function run()
 	context.fillRect(0, 0, canvas.width, canvas.height);
 	
 	var deltaTime = getDeltaTime();
-    
-        
-    // Draw the GUI
-    // GUI.DrawScore();
-        
-	// update the frame counter 
-	fpsTime += deltaTime;
-	fpsCount++;
-	if(fpsTime >= 1)
-	{
-		fpsTime -= 1;
-		fps = fpsCount;
-		fpsCount = 0;
-	}		
+
+	// // update the frame counter 
+	// fpsTime += deltaTime;
+	// fpsCount++;
+	// if(fpsTime >= 1)
+	// {
+	// 	fpsTime -= 1;
+	// 	fps = fpsCount;
+	// 	fpsCount = 0;
+	// }		
 		
-	// draw the FPS
-	context.fillStyle = "#ffffff";
-	context.font="14px Arial";
-	context.fillText("FPS: " + fps, 5, 20, 100);
+	// // draw the FPS
+	// context.fillStyle = "#ffffff";
+	// context.font="14px Arial";
+	// context.fillText("FPS: " + fps, 5, 20, 100);
     
     // Game State Manager
     switch(Gamestate)

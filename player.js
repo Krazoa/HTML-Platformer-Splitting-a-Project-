@@ -35,7 +35,7 @@ var Player = function()
     // this.y = canvas.height/2;
     this.position = new Vector2(canvas.width/2, canvas.height/2);
     // this.position.Set(9*TILE, 0*TILE);
-    this.position.Set(9*TILE, 0*TILE);
+    this.position.Set(80, 0*TILE); //Changed so Chuck does not fall straight into the pit
     // this.position.x = 9*TILE
     // this.position.y = 0*TILE
     
@@ -56,6 +56,7 @@ var Player = function()
     
     this.direction = RIGHT;
     
+    this.cooldownTimer = 0;
     
     // this.image.src = "hero.png";
 };
@@ -154,6 +155,14 @@ Player.prototype.update = function(deltaTime)
             this.sprite.setAnimation(ANIM_JUMP_RIGHT);
         }
     }
+    if(this.cooldownTimer>0)
+    {
+        tile.cooldownTimer -= deltaTime;
+    }
+    if(keyboard.isKeyDown(keyboard.KEY_SHIFT) == true && this.cooldownTimer <= 0)
+        sfxFire.play();
+        this.dooldownTimer = 0.3;
+        //insert bullet fire code here
     
     //find players new position and velocity
     this.position.y = Math.floor(this.position.y + (deltaTime * this.velocity.y));
