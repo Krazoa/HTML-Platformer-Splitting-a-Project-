@@ -73,3 +73,5 @@ var enemies = [];   //Array bracket holding all the enemies in the map
 var musicBackground;
 var sfxFire;
 var sfxPlayerDie;
+//Array of Bulletz
+var bullets = []

@@ -157,7 +157,7 @@ function runGameplay(deltaTime)
         if(lives == 0)
         {
             sfxPlayerDie.play();
-            console.log("Chuck Norris is dead...just kidding, Chuck Norris never dies.")
+            // console.log("Player died")
             Gamestate = Gamestate_over;
         }
     }
@@ -193,7 +193,19 @@ function runGamereset(deltaTime)
     
     context.fillStyle = "#ffffff";
     context.font = "18px Arial";
-    context.fillText("In the year 30XX, Chuck Norris battle againsed the bats begins!", 100, 200)
+    context.fillText("In the year 30XX, Chuck Norris decides to go on another pointless rampage...", 100, 200)
+    
+    context.fillStyle = "#ffffff";
+    context.font = "14px Arial";
+    context.fillText("Movement Controls: Left and Right Arrow Keys", 100, 350)
+    
+    context.fillStyle = "#ffffff";
+    context.font = "14px Arial";
+    context.fillText("Climbing Controls: Up Arrow Key", 100, 400)
+    
+    context.fillStyle = "#ffffff";
+    context.font = "14px Arial";
+    context.fillText("Shooting Controls: Shift Key", 100, 450)
     
     //Insert some sort of background here
     
@@ -317,7 +329,7 @@ function initialize()
             urls: ["background.ogg"],
             loop: true,
             buffer: true,
-            volume: 0.5
+            volume: 0.4
         });
         
     sfxFire = new Howl({

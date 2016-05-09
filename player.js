@@ -157,12 +157,15 @@ Player.prototype.update = function(deltaTime)
     }
     if(this.cooldownTimer>0)
     {
-        tile.cooldownTimer -= deltaTime;
+        this.cooldownTimer -= deltaTime;
     }
     if(keyboard.isKeyDown(keyboard.KEY_SHIFT) == true && this.cooldownTimer <= 0)
+    {
         sfxFire.play();
-        this.dooldownTimer = 0.3;
+        this.cooldownTimer = 0.3;
+        // console.log("bullet fired");
         //insert bullet fire code here
+    }
     
     //find players new position and velocity
     this.position.y = Math.floor(this.position.y + (deltaTime * this.velocity.y));
