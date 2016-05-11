@@ -24,10 +24,11 @@ var Bullet = function(x, y, moveRight)
         this.velocity.Set(-MAXDX *2, 0);
     }
 }
-Bullet.prototype.update = function(dt)
+Bullet.prototype.update = function(deltaTime)
 {
-    this.sprite.update(dt);
-    this.position.x = Math.floor(this.position.x + (dt * this.velocity.x));
+    console.log(this.position)
+    // this.sprite.update();
+    this.position.x = Math.floor(this.position.x + (deltaTime * this.velocity.x));
 }
 Bullet.prototype.draw = function()
 {

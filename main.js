@@ -116,15 +116,10 @@ function runGameplay(deltaTime)
     DrawLives();
     drawMap();
     player.draw();
-    bullets.draw();
     DrawScore();
     DrawHPCounter();
     // KillCounter.prototype.draw();
     RunBulletChecks();
-    if(bullets.length > 1)
-    {
-        bullets.update(deltaTime);
-    }
     
     //Debug Keys
     if(keyboard.isKeyDown(keyboard.KEY_A) == true)
@@ -314,13 +309,13 @@ function drawMap()
         }
     }
 }
-function RunBulletChecks()
+function RunBulletChecks(deltaTime)
 {
     var hit = false;
     for(var i=0; i<bullets.length; i++)
     {
         bullets[i].update(deltaTime);
-        if(bullets[i].position.x - worldOffset < 0 || bullets[i].position.s - worldOffsetX > SCREEN_WIDTH)
+        if(bullets[i].position.x - worldOffsetX < 0 || bullets[i].position.s - worldOffsetX > SCREEN_WIDTH)
         {
             hit = true;
         }
@@ -344,6 +339,7 @@ function RunBulletChecks()
             bullet.spice(i, 1);
             break;
         }
+        bullets[i].draw();
     }   
 }
 
