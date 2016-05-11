@@ -19,6 +19,7 @@ function DrawLives()
 }
 function DrawHPCounter()
 {
+    //displaying health bar on HUD
     context.fillStyle = "#ff0000"
     context.fillRect(30, 40, player_hp, 30);
 }
@@ -31,6 +32,7 @@ var KillCounter = function()
     this.width = 48;
     this.image.src = "skull_gold";
 }
+//displaying the number of kills on the HUD
 KillCounter.prototype.draw = function()
 {
     context.save();

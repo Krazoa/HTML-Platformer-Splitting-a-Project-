@@ -113,12 +113,14 @@ function runGameplay(deltaTime)
 {
     
     player.update(deltaTime);
+    bullets.update(deltaTime);
     DrawLives();
     drawMap();
     player.draw();
     DrawScore();
     DrawHPCounter();
-    // KillCounter.draw();
+    // KillCounter.prototype.draw();
+    RunBulletChecks();
     
     
     //Debug Keys
@@ -149,16 +151,22 @@ function runGameplay(deltaTime)
     //     enemies[i].update(deltaTime);
     // }
     
+    if(player.position.y > SCREEN_HEIGHT + 100)
+    {
+        player_hp = 0;
+    }
+    
     if(player_hp <= 0)
     {
-        // console.log(lives)
-        lives -= 1;
-        player_hp = 100;
         if(lives == 0)
         {
             sfxPlayerDie.play();
             // console.log("Player died")
             Gamestate = Gamestate_over;
+        }
+        else
+        {
+            Gamestate = Gamestate_death;
         }
     }
 }
@@ -171,8 +179,35 @@ function runGamevalreset(deltaTime)
     player_hp = 100;
     lives = 3;
     Gamestate = Gamestate_reset;
+    player.position.Set(80, 350);
+    bullets.splice(0, bullets.length);
+    enemies.spice(0, enemies.length);
+}
+function runGamedeath(deltaTime)
+{
+    // console.log(lives)
+    drawMap();
+    context.fillStyle = "#ff0000";
+    context.font = "80px Arial";
+    context.fillText("YOU DIED", 100, SCREEN_HEIGHT/2)
+    
+    context.fillStyle = "#ff0000";
+    context.font = "24px Arial";
+    context.fillText("Press 'R' to respawn", 100, 500)
+    if(keyboard.isKeyDown(keyboard.KEY_R) == true)
+    {
+        lives -= 1;
+        player_hp = 100;
+        player.position.Set(80, 350);
+        Gamestate = Gamestate_play;
+    }
+}
+
+function runGameWin(deltaTime)
+{
     
 }
+
 function runGameover(deltaTime)
 {
     Enterstate = false;
@@ -276,6 +311,38 @@ function drawMap()
         }
     }
 }
+function RunBulletChecks()
+{
+    var hit = false;
+    for(var i=0; i<bullets.length; i++)
+    {
+        bullets[i].update(deltaTime);
+        if(bullets[i].position.x - worldOffset < 0 || bullets[i].position.s - worldOffsetX > SCREEN_WIDTH)
+        {
+            hit = true;
+        }
+        //else hit = false (In case hit is somehow stuck on true after being triggered)
+        
+        for(var j=0; j<enemies.length; j++)
+        {
+            if(intersects(bullets[i].position.x, bullets[i].position.y, TILE, TILE, enemies[j].position.x, enemies[j].position.y, TILE, TILE) == true)
+            {
+                //remove the enemy
+                enemies.spice(j, 1);
+                hit = true;
+                //add kill to score/kill counter
+                score += 100;
+                break;
+            }
+        }
+        if(hit == true)
+        {
+            //remove the colliding bullet
+            bullet.spice(i, 1);
+            break;
+        }
+    }   
+}
 
 //Creating a cells array
 var cells = [];
@@ -307,6 +374,8 @@ function initialize()
         }
     }
     
+    
+    
     // //adding enemies
     // Idx = 0;
     // for(var y = 0; y < level1.layers[LAYER_OBJECT_ENEMIES].height; y++)
@@ -329,7 +398,7 @@ function initialize()
             urls: ["background.ogg"],
             loop: true,
             buffer: true,
-            volume: 0.4
+            volume: 0.15
         });
         
     sfxFire = new Howl({
@@ -404,6 +473,12 @@ function run()
             break;
         case Gamestate_resetvalues:
             runGamevalreset(deltaTime);
+            break;
+        case Gamestate_win:
+            runGameWin(deltaTime);
+            break;
+        case Gamestate_death:
+            runGamedeath(deltaTime);
             break;
     }
     

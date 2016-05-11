@@ -35,7 +35,7 @@ var Player = function()
     // this.y = canvas.height/2;
     this.position = new Vector2(canvas.width/2, canvas.height/2);
     // this.position.Set(9*TILE, 0*TILE);
-    this.position.Set(80, 0*TILE); //Changed so Chuck does not fall straight into the pit
+    this.position.Set(80, 350); //Changed so Chuck does not fall straight into the pit
     // this.position.x = 9*TILE
     // this.position.y = 0*TILE
     
@@ -164,7 +164,8 @@ Player.prototype.update = function(deltaTime)
         sfxFire.play();
         this.cooldownTimer = 0.3;
         // console.log("bullet fired");
-        //insert bullet fire code here
+        bullets.draw();
+        bullets.push(Bullet);
     }
     
     //find players new position and velocity
