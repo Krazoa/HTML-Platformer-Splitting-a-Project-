@@ -398,7 +398,7 @@ function initialize()
             urls: ["background.ogg"],
             loop: true,
             buffer: true,
-            volume: 0.15
+            volume: 0.05
         });
         
     sfxFire = new Howl({
