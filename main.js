@@ -113,15 +113,18 @@ function runGameplay(deltaTime)
 {
     
     player.update(deltaTime);
-    bullets.update(deltaTime);
     DrawLives();
     drawMap();
     player.draw();
+    bullets.draw();
     DrawScore();
     DrawHPCounter();
     // KillCounter.prototype.draw();
     RunBulletChecks();
-    
+    if(bullets.length > 1)
+    {
+        bullets.update(deltaTime);
+    }
     
     //Debug Keys
     if(keyboard.isKeyDown(keyboard.KEY_A) == true)

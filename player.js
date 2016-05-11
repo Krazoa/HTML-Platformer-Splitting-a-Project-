@@ -164,8 +164,7 @@ Player.prototype.update = function(deltaTime)
         sfxFire.play();
         this.cooldownTimer = 0.3;
         // console.log("bullet fired");
-        bullets.draw();
-        bullets.push(Bullet);
+        bullets.push(new Bullet(this.position.x, this.position.y));
     }
     
     //find players new position and velocity

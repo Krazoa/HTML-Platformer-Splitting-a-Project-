@@ -3,6 +3,7 @@ var context = canvas.getContext("2d");
 
 var Bullet = function(x, y, moveRight)
 {
+    this.image = document.createElement("img");
     this.image.src = "bullet.png";
     // this.sprite = new Sprite("bullet.png");
     // this.sprite.buildAnimation(1, 1, 32, 32, -1, [0]);
@@ -10,17 +11,17 @@ var Bullet = function(x, y, moveRight)
     // this.sprite.setLoop(0, false);
     
     this.position = new Vector2();
-    this.position.set(x, y);
+    this.position.Set(x, y);
     this.velocity = new Vector2();
     
     this.moveRight = moveRight;
     if(this.moveRight == true)
     {
-        this.velocity.set(MAXDX *2, 0);
+        this.velocity.Set(MAXDX *2, 0);
     }
     else
     {
-        this.velocity.set(-MAXDX *2, 0);
+        this.velocity.Set(-MAXDX *2, 0);
     }
 }
 Bullet.prototype.update = function(dt)
