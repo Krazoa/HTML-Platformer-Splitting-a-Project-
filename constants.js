@@ -50,6 +50,7 @@ var Gamestate_reset = 3;
 var Gamestate_resetvalues = 4;
 var Gamestate_win = 5;
 var Gamestate_death = 6;
+var win = false;
 //Defult Start Game State
 var Gamestate = Gamestate_splash;
 //Splash Timer

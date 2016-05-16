@@ -57,12 +57,20 @@ var Player = function()
     this.direction = RIGHT;
     
     this.cooldownTimer = 0;
+
+    this.isAlive = true;
     
     // this.image.src = "hero.png";
 };
 
 Player.prototype.update = function(deltaTime)
 {
+    if (this.isAlive == false)
+    {
+        return;
+    }
+    else
+    {
     this.sprite.update(deltaTime);
     
     var left = false;
@@ -164,7 +172,7 @@ Player.prototype.update = function(deltaTime)
         sfxFire.play();
         this.cooldownTimer = 0.3;
         console.log("bullet fired");
-        bullets.push(new Bullet(this.position.x, this.position.y));
+        bullets.push(new Bullet(this.position.x, this.position.y, this.direction));
     }
     
     //find players new position and velocity
@@ -236,7 +244,33 @@ Player.prototype.update = function(deltaTime)
             this.velocity.x = 0;    //set horizontal velocity to 0
         }
     }
+    }
+}
+Player.prototype.updateRunJumpState = function()
+{
+    if (this.direction != right && this.direction != left && this.falling == false)
+    {
+        var cell = cellAtTileCoord(LAYER_LADDERS, tx, ty);
+        var cellright = cellAtTileCoord(LAYER_LADDERS, tx + 1, ty);
+        var celldown = cellAtTileCoord(LAYER_LADDERS, tx, ty + 1);
+        var celldiag = cellAtTileCoord(LAYER_LADDERS, tx + 1, ty + 1);
+    }
 
+    if ((celldown && !cell) || (celldiag && !cellright && nx))
+    {
+        if(keyboard.isKeyDown(keyboard.KEY_UP) == true)
+        {
+            //state = climb state
+            //set climb animation
+        }
+    }
+    
+    if(cellAtTileCoord(LAYER_OBJECT_TRIGGERS, tx, ty) == true)
+    {
+        win = true;
+    }
+    
+    
 }
 
 Player.prototype.draw = function()

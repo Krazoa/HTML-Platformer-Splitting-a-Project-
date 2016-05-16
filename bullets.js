@@ -26,9 +26,9 @@ var Bullet = function(x, y, moveRight)
 }
 Bullet.prototype.update = function(deltaTime)
 {
-    console.log(this.position)
     // this.sprite.update();
     this.position.x = Math.floor(this.position.x + (deltaTime * this.velocity.x));
+    // console.log(this.position)
 }
 Bullet.prototype.draw = function()
 {
@@ -37,4 +37,6 @@ Bullet.prototype.draw = function()
     context.save();
         context.drawImage(this.image, screenX, this.position.y);
     context.restore();
+    console.log(this.position)
+    // console.log(this.velocity.x)
 }

@@ -167,6 +167,10 @@ function runGameplay(deltaTime)
             Gamestate = Gamestate_death;
         }
     }
+    if(win == true)
+    {
+        Gamestate = Gamestate_win;
+    }
 }
 function runGamevalreset(deltaTime)
 {
@@ -174,12 +178,14 @@ function runGamevalreset(deltaTime)
     score = 0;
     reset_timer = 3;
     Cheat = false;
+    win = false;
     player_hp = 100;
     lives = 3;
     Gamestate = Gamestate_reset;
     player.position.Set(80, 350);
     bullets.splice(0, bullets.length);
     enemies.spice(0, enemies.length);
+    player.isAlive = true;
 }
 function runGamedeath(deltaTime)
 {
@@ -203,7 +209,22 @@ function runGamedeath(deltaTime)
 
 function runGameWin(deltaTime)
 {
+    Enterstate = false;
+    context.fillStyle = "#ffffff";
+    context.font = "26px Arial";
+    context.fillText("You Win?", 100, SCREEN_HEIGHT/2 - 50)
     
+    context.fillStyle = "#ffffff";
+    context.font = "25px Arial";
+    context.fillText("Suddenly, Chuck Norris got bored and decided to go home. How anti-climatic.", 100, SCREEN_HEIGHT/2)
+
+    context.fillStyle = "#ffffff";
+    context.font = "24px Arial";
+    context.fillText("Press R to go back to restart.", 100, SCREEN_HEIGHT/2 + 50)
+    if(keyboard.isKeyDown(keyboard.KEY_R) == true)
+    {
+        Gamestate = Gamestate_resetvalues;
+    }
 }
 
 function runGameover(deltaTime)
@@ -212,7 +233,8 @@ function runGameover(deltaTime)
     context.fillStyle = "#ffffff";
     context.font = "25px Arial";
     context.fillText("Chuck Norris is dead...just kidding, Chuck Norris never dies.", 100, SCREEN_HEIGHT/2)
-    
+    player.isAlive = false;
+
     context.fillStyle = "#ffffff";
     context.font = "24px Arial";
     context.fillText("Press R to restart.", 100, SCREEN_HEIGHT/2 + 50)
@@ -326,7 +348,7 @@ function RunBulletChecks(deltaTime)
             if(intersects(bullets[i].position.x, bullets[i].position.y, TILE, TILE, enemies[j].position.x, enemies[j].position.y, TILE, TILE) == true)
             {
                 //remove the enemy
-                enemies.spice(j, 1);
+                enemies.splice(j, 1);
                 hit = true;
                 //add kill to score/kill counter
                 score += 100;
@@ -336,7 +358,7 @@ function RunBulletChecks(deltaTime)
         if(hit == true)
         {
             //remove the colliding bullet
-            bullet.spice(i, 1);
+            bullet.splice(i, 1);
             break;
         }
         bullets[i].draw();
@@ -373,7 +395,27 @@ function initialize()
         }
     }
     
-    
+    cells[LAYER_OBJECT_TRIGGERS] = [];
+    Idx = 0;
+    for(var y = 0; y < level1.layers[LAYER_OBJECT_TRIGGERS].height; y++)
+    {
+        cells[LAYER_OBJECT_TRIGGERS][y] = [];
+        for(var x = 0; x < level1.layers[LAYER_OBJECT_TRIGGERS].width; x++)
+        {
+            if(level1.layers[LAYER_OBJECT_TRIGGERS].data[Idx] != 0)
+            {
+                cells[LAYER_OBJECT_TRIGGERS][y][x] = 1;
+                cells[LAYER_OBJECT_TRIGGERS][y-1][x] = 1;
+                cells[LAYER_OBJECT_TRIGGERS][y-1][x+1] = 1;
+                cells[LAYER_OBJECT_TRIGGERS][y][x+1] = 1;
+            }
+            else if(cells[LAYER_OBJECT_TRIGGERS][y][x] != 1)
+            {
+                cells[LAYER_OBJECT_TRIGGERS][y][x] = 0;
+            }
+            Idx++;
+        }
+    }
     
     // //adding enemies
     // Idx = 0;
