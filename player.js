@@ -63,6 +63,7 @@ var Player = function()
     // this.image.src = "hero.png";
 };
 
+
 Player.prototype.update = function(deltaTime)
 {
     if (this.isAlive == false)
@@ -244,12 +245,96 @@ Player.prototype.update = function(deltaTime)
             this.velocity.x = 0;    //set horizontal velocity to 0
         }
     }
+    
+    var tileX = pixleToTile(this.position.x)
+    var tileY = pixleToTile(this.position.y)
+    
+    if(cellAtTileCoord(LAYER_OBJECT_TRIGGERS, tileX, tileY) != 0)
+    {
+        Gamestate = Gamestate_win;
+    }
     }
 }
-// Player.prototype.updateRunJumpState = function()
-function updateRunJumpState()
+
+Player.prototype.updateClimbState = function()
 {
-    if (this.direction != right && this.direction != left && this.falling == false)
+    var climbUp = false
+    var climbDown = false
+    var wasMovingUp = false
+    var wasMovingDown = false
+    
+    if(keyboard.isKeyDown(keyboard.KEY_DOWN) == true)
+    {
+        climbUp = true
+        //update sprite //This is only update when the sprite is moving
+    }
+    if(keyboard.isKeyDown(keyboard.KEY_DOWN) == true)
+    {
+        climbUp = true
+        //update sprite
+    }
+    
+    if(this.velocity.y > 0)
+    {
+        wasMovingUp = true
+    }
+    if(this.velocity.y < 0)
+    {
+        wasMovingDown = true
+    }
+    
+    var AccelerationY = 0;
+    if(climbUp == true)
+    {
+        //Possible issues============================================
+        AccelerationY = AccelerationY - ACCEL
+    }
+    else if(wasMovingUp == true)
+    {
+        velocity.y = 0;
+    }
+    
+    if(climbDown == true)
+    {
+        //Possible issues============================================
+        AccelerationY = AccelerationY + ACCEL
+    }
+    else if(wasMovingDown == true)
+    {
+        velocity.y = 0;
+    }
+    
+    AccelerationY = AccelerationY + velocity.y
+    if (AccelerationY > MAXDY)
+    {
+        AccelerationY = AccelerationY
+    }
+    
+    //calculate tile X, Y using player's position
+    var cell = cellAtTileCoord(LAYER_LADDERS, tx, ty);
+    var cellright = cellAtTileCoord(LAYER_LADDERS, tx + 1, ty);
+    var celldown = cellAtTileCoord(LAYER_LADDERS, tx, ty + 1);
+    var celldiag = cellAtTileCoord(LAYER_LADDERS, tx + 1, ty + 1);
+    
+    if (velocity.y > 0 || wasMovingDown)
+    {
+        if((!cell && cellright) || (!celldown && celldiag && ny)) //Possible issues============================================
+        {
+           //set state to run,jump
+        }
+        else if(velocity.y < 0 || wasMovingUp)
+        {
+            if((cell && !cellright) || (celldown && !celldiag && ny)) //Possible issues============================================
+            {
+               //set state to run,jump 
+            } 
+        }
+    }
+}
+
+Player.prototype.updateRunJumpState = function()
+{
+    if (this.falling = false)
     {
         var cell = cellAtTileCoord(LAYER_LADDERS, tx, ty);
         var cellright = cellAtTileCoord(LAYER_LADDERS, tx + 1, ty);
@@ -257,7 +342,7 @@ function updateRunJumpState()
         var celldiag = cellAtTileCoord(LAYER_LADDERS, tx + 1, ty + 1);
     }
 
-    if ((celldown && !cell) || (celldiag && !cellright && nx))
+    if ((!celldown && cell) || (!celldiag && cellright && nx))//Possible ERROR===================================================
     {
         if(keyboard.isKeyDown(keyboard.KEY_UP) == true)
         {
@@ -265,10 +350,13 @@ function updateRunJumpState()
             //set climb animation
         }
     }
-    
-    if(cellAtTileCoord(LAYER_OBJECT_TRIGGERS, tx, ty) == true)
+    if ((celldown && !cell) || (celldiag && !cellright && nx))//Possible ERROR===================================================
     {
-        win = true;
+        if(keyboard.isKeyDown(keyboard.KEY_UP) == true)
+        {
+            //state = climb state
+            //set climb animation
+        }
     }
     
     

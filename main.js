@@ -144,10 +144,10 @@ function runGameplay(deltaTime)
     }
     
     // //Add enemies
-    // for(var i=0; i<enemies.length; i++)
-    // {
-    //     enemies[i].update(deltaTime);
-    // }
+    for(var i=0; i<enemies.length; i++)
+    {
+        enemies[i].update(deltaTime);
+    }
     
     if(player.position.y > SCREEN_HEIGHT + 100)
     {
@@ -167,11 +167,28 @@ function runGameplay(deltaTime)
             Gamestate = Gamestate_death;
         }
     }
-    if(win == true)
+    
+    switch(Playerstate)
     {
-        Gamestate = Gamestate_win;
+        case Playerstate_RunJump:
+            player.updateRunJumpState();
+            break;
+        case Playerstate_Climb:
+            player.updateClimbState();
+            break;
     }
+    
 }
+// function PlayerUpdateRunJumpState()
+// {
+    
+// }
+// function Playerstate_Climb()
+// {
+    
+// }
+
+
 function runGamevalreset(deltaTime)
 {
     //Reset all values
@@ -184,7 +201,7 @@ function runGamevalreset(deltaTime)
     Gamestate = Gamestate_reset;
     player.position.Set(80, 350);
     bullets.splice(0, bullets.length);
-    enemies.spice(0, enemies.length);
+    enemies.splice(0, enemies.length);
     player.isAlive = true;
 }
 function runGamedeath(deltaTime)
@@ -331,6 +348,16 @@ function drawMap()
         }
     }
 }
+
+function intersects(x1, y1, w1, h1, x2, y2, w2, h2)
+{
+	if (y2 + h2 < y1 ||x2 + w2 < x1 || x2 > x1 + w1 || y2 > y1 + h1)
+	{
+		return false;
+	}
+	return true;
+}
+
 function RunBulletChecks(deltaTime)
 {
     var hit = false;
@@ -358,8 +385,12 @@ function RunBulletChecks(deltaTime)
         if(hit == true)
         {
             //remove the colliding bullet
-            bullet.splice(i, 1);
+            bullets.splice(i, 1);
             break;
+        }
+        if(bullets[i].x > SCREEN_WIDTH)
+        {
+            bullet.splice(i, 1);
         }
         bullets[i].draw();
     }   
@@ -417,25 +448,24 @@ function initialize()
         }
     }
     
-    // //adding enemies
-    // Idx = 0;
-    // for(var y = 0; y < level1.layers[LAYER_OBJECT_ENEMIES].height; y++)
-    // {
-    //     for(var x = 0; x < level1.layers[LAYER_OBJECT_ENEMIES].width; x++)
-    //     {
-    //         if(level1.layers[LAYER_OBJECT_ENEMIES.data[Idx] != 0)
-    //         {
-    //             var px = tileToPixle(x);
-    //             var py = tileToPixle(y);
-    //             var e = new Enemy(px, py);
-    //             enemies.push(e);
-    //         }
-    //         Idx++;
-    //     }
-    // }
-    
-    musicBackground = new Howl(
+    //adding enemies
+    Idx = 0;
+    for(var y = 0; y < level1.layers[LAYER_OBJECT_ENEMIES].height; y++)
+    {
+        for(var x = 0; x < level1.layers[LAYER_OBJECT_ENEMIES].width; x++)
         {
+            if(level1.layers[LAYER_OBJECT_ENEMIES].data[Idx] != 0)
+            {
+                var px = tileToPixle(x);
+                var py = tileToPixle(y);
+                var e = new Enemy(px, py);
+                enemies.push(e);
+            }
+            Idx++;
+        }
+    }
+    
+    musicBackground = new Howl({
             urls: ["background.ogg"],
             loop: true,
             buffer: true,
@@ -536,7 +566,9 @@ function run()
     // DrawLevelCollisionData(0, "#00ff00");
     // DrawLevelCollisionData(1, "#0000ff");
     // DrawLevelCollisionData(2, "#ff0000");
-	
+    // DrawLevelCollisionData(3, "#ff00ff");
+    // DrawLevelCollisionData(4, "#ffff00");
+    	
     //Debug players collision box
     // context.fillStyle = "#ffffff";
     // context.fillRect(player.position.x, player.position.y, TILE, TILE);

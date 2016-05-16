@@ -34,8 +34,8 @@ var LAYER_COUNT = 3;
 var LAYER_BACKGROUND = 0; //0 = no collision
 var LAYER_PLATFORMS = 1; //1 = collision with a platform
 var LAYER_LADDERS = 2; //2 = collision with a ladder
-var LAYER_OBJECT_ENEMIES = 3; //These two layers are enemy layers. They wont be added to the layer count as they
-var LAYER_OBJECT_TRIGGERS = 4;//both do not contain any collisions and do not get drawn.
+var LAYER_OBJECT_TRIGGERS = 3;//both do not contain any collisions and do not get drawn.
+var LAYER_OBJECT_ENEMIES = 4; //These two layers are enemy layers. They wont be added to the layer count as they
 //level dimentions in tiles
 var MAP = {tw: 60, th: 17};
 //offset X of the world
@@ -50,7 +50,6 @@ var Gamestate_reset = 3;
 var Gamestate_resetvalues = 4;
 var Gamestate_win = 5;
 var Gamestate_death = 6;
-var win = false;
 //Defult Start Game State
 var Gamestate = Gamestate_splash;
 //Splash Timer
@@ -61,6 +60,8 @@ var reset_timer = 3;
 var score = 0;
 //Setting player life
 var player_hp = 100;
+//Damage Cooldown
+var damageCooldown = 2;
 //Player Lives
 var lives = 2;
 //Misc Key Values
@@ -78,3 +79,8 @@ var sfxFire;
 var sfxPlayerDie;
 //Array of Bulletz
 var bullets = [];
+//Player states
+var Playerstate_RunJump = 0;
+var Playerstate_Climb = 1;
+//Defult start player state
+var Playerstate = Playerstate_RunJump;
