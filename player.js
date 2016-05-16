@@ -246,7 +246,8 @@ Player.prototype.update = function(deltaTime)
     }
     }
 }
-Player.prototype.updateRunJumpState = function()
+// Player.prototype.updateRunJumpState = function()
+function updateRunJumpState()
 {
     if (this.direction != right && this.direction != left && this.falling == false)
     {

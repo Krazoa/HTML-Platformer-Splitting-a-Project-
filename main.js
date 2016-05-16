@@ -119,7 +119,7 @@ function runGameplay(deltaTime)
     DrawScore();
     DrawHPCounter();
     // KillCounter.prototype.draw();
-    RunBulletChecks();
+    RunBulletChecks(deltaTime);
     
     //Debug Keys
     if(keyboard.isKeyDown(keyboard.KEY_A) == true)
