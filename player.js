@@ -172,7 +172,7 @@ Player.prototype.update = function(deltaTime)
     {
         sfxFire.play();
         this.cooldownTimer = 0.3;
-        console.log("bullet fired");
+        // console.log("bullet fired");
         bullets.push(new Bullet(this.position.x, this.position.y, this.direction));
     }
     
@@ -207,7 +207,7 @@ Player.prototype.update = function(deltaTime)
 
     if(this.velocity.y > 0)
     {
-        if((celldown && !cell) || (celldiag && !cellright && nx))
+        if((celldown && !cell) || (celldiag && !cellright /** && nx or y*/))
         {
             //set y pos to 0 (Colliding with a platform)
             this.position.y = tileToPixle(ty);
@@ -219,7 +219,7 @@ Player.prototype.update = function(deltaTime)
     }
     else if(this.velocity.y < 0)
     {
-        if((cell && !celldown) || (cellright && !celldiag && nx))
+        if((cell && !celldown) || (cellright && !celldiag /** && nx or y*/))
         {
                //set y position to 0 so the player does not pop through the platform above if they jump under it
                this.position.y = tileToPixle(ty + 1);
@@ -231,7 +231,7 @@ Player.prototype.update = function(deltaTime)
     }
     if(this.velocity.x > 0) 
     {
-        if((cellright && !cell) || (celldiag && !celldown && ny)) 
+        if((cellright && !cell) || (celldiag && !celldown /** && ny*/)) 
         {
             this.position.x = tileToPixle(tx);
             this.velocity.x = 0;    //set horizontal velocity to 0
@@ -239,7 +239,7 @@ Player.prototype.update = function(deltaTime)
     }
     else if(this.velocity.x < 0) 
     {
-        if((cell && !cellright) || (celldown && !celldiag && ny)) 
+        if((cell && !cellright) || (celldown && !celldiag /** && ny*/)) 
         {
             this.position.x = tileToPixle(tx + 1);
             this.velocity.x = 0;    //set horizontal velocity to 0
@@ -254,24 +254,46 @@ Player.prototype.update = function(deltaTime)
         Gamestate = Gamestate_win;
     }
     }
+    switch(Playerstate)
+    {
+        case Playerstate_RunJump:
+            player.updateRunJumpState(deltaTime);
+            break;
+        case Playerstate_Climb:
+            player.updateClimbState(deltaTime);
+            break;
+    }
 }
 
-Player.prototype.updateClimbState = function()
+Player.prototype.updateClimbState = function(deltaTime)
+// function updateClimbState(deltaTime)
 {
+    console.log("Climb Player State called")
     var climbUp = false
     var climbDown = false
     var wasMovingUp = false
     var wasMovingDown = false
     
-    if(keyboard.isKeyDown(keyboard.KEY_DOWN) == true)
+    this.velocity.x = 0; //Clamp x velocity so the player does not walk off a ladder into thin-air
+    
+    if(keyboard.isKeyDown(keyboard.KEY_UP) == true)
     {
         climbUp = true
         //update sprite //This is only update when the sprite is moving
+        // this.sprite.setAnimation(ANIM_CLIMB);
+    }
+    else if(keyboard.isKeyDown(keyboard.KEY_UP) == false)
+    {
+        climbUp = false
     }
     if(keyboard.isKeyDown(keyboard.KEY_DOWN) == true)
     {
-        climbUp = true
-        //update sprite
+        climbDown = true
+        // this.sprite.setAnimation(ANIM_CLIMB);
+    }
+    else if(keyboard.isKeyDown(keyboard.KEY_DOWN) == false)
+    {
+        climbDown = false
     }
     
     if(this.velocity.y > 0)
@@ -291,7 +313,7 @@ Player.prototype.updateClimbState = function()
     }
     else if(wasMovingUp == true)
     {
-        velocity.y = 0;
+        this.velocity.y = 0;
     }
     
     if(climbDown == true)
@@ -301,61 +323,86 @@ Player.prototype.updateClimbState = function()
     }
     else if(wasMovingDown == true)
     {
-        velocity.y = 0;
+        this.velocity.y = 0;
     }
     
-    AccelerationY = AccelerationY + velocity.y
+    AccelerationY = AccelerationY + this.velocity.y
     if (AccelerationY > MAXDY)
     {
+        //clamp acceleration
         AccelerationY = AccelerationY
     }
+    
+    this.velocity.y += AccelerationY;
+    
+    var tx = pixleToTile(this.position.x);
+    var ty = pixleToTile(this.position.y);
+    var nx = (this.position.x)%TILE;
+    var ny = (this.position.y)%TILE;
     
     //calculate tile X, Y using player's position
     var cell = cellAtTileCoord(LAYER_LADDERS, tx, ty);
     var cellright = cellAtTileCoord(LAYER_LADDERS, tx + 1, ty);
     var celldown = cellAtTileCoord(LAYER_LADDERS, tx, ty + 1);
-    var celldiag = cellAtTileCoord(LAYER_LADDERS, tx + 1, ty + 1);
+    var celldiag = cellAtTileCoord(LAYER_LADDERS, tx + 1, ty + 1)
     
-    if (velocity.y > 0 || wasMovingDown)
+    if (this.velocity.y > 0 || wasMovingDown == true || this.velocity < 0)
     {
-        if((!cell && cellright) || (!celldown && celldiag && ny)) //Possible issues============================================
+        // if((cell && !cellright) || (celldown && !celldiag /** && ny*/)) //Possible issues============================================
+        if((cell && celldown) == 0 || (cellright && celldiag) == 0)
         {
-           //set state to run,jump
+           Playerstate = Playerstate_RunJump;
+           return;
         }
-        else if(velocity.y < 0 || wasMovingUp)
+        else if(this.velocity.y < 0 || wasMovingUp == true)
         {
-            if((cell && !cellright) || (celldown && !celldiag && ny)) //Possible issues============================================
+            // if((!cell && cellright) || (!celldown && celldiag /** && ny*/)) //Possible issues============================================
+            ((cell && celldown) == 0 || (cellright && celldiag) == 0)
             {
-               //set state to run,jump 
+               Playerstate = Playerstate_RunJump;
+               return;
             } 
         }
     }
 }
 
-Player.prototype.updateRunJumpState = function()
+Player.prototype.updateRunJumpState = function(deltaTime)
+// function updateRunJumpState(deltaTime)
 {
-    if (this.falling = false)
+    console.log("Run & Jump Player State called")
+    if (this.falling == false)
     {
+        var tx = pixleToTile(this.position.x);
+        var ty = pixleToTile(this.position.y);
+        var nx = (this.position.x)%TILE;
+        var ny = (this.position.y)%TILE;
+        
         var cell = cellAtTileCoord(LAYER_LADDERS, tx, ty);
         var cellright = cellAtTileCoord(LAYER_LADDERS, tx + 1, ty);
         var celldown = cellAtTileCoord(LAYER_LADDERS, tx, ty + 1);
         var celldiag = cellAtTileCoord(LAYER_LADDERS, tx + 1, ty + 1);
+        // console.log("cells defined");
     }
 
-    if ((!celldown && cell) || (!celldiag && cellright && nx))//Possible ERROR===================================================
+    // if ((celldown && !cell) || (celldiag && !cellright && ny))//Possible issues===================================================
+    if((cell) != 0 || (cellright) != 0)
     {
         if(keyboard.isKeyDown(keyboard.KEY_UP) == true)
         {
-            //state = climb state
-            //set climb animation
+            Playerstate = Playerstate_Climb;
+            // this.sprite.setAnimation(ANIM_CLIMB);
+            return;
         }
     }
-    if ((celldown && !cell) || (celldiag && !cellright && nx))//Possible ERROR===================================================
+    //check if player is standing on top ladder
+    // if ((!celldown && cell) || (!celldiag && cellright && ny))//Possible issues===================================================
+    if((celldown) != 0 || (celldiag) != 0)
     {
         if(keyboard.isKeyDown(keyboard.KEY_UP) == true)
         {
-            //state = climb state
-            //set climb animation
+            Playerstate = Playerstate_Climb;
+            // this.sprite.setAnimation(ANIM_CLIMB);
+            return;
         }
     }
     

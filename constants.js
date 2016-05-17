@@ -28,8 +28,8 @@ var ACCEL = MAXDX * 2;
 var FRICTION = MAXDX * 6;
 //jump distance at which the player jumps at (bunny hopping??)
 var JUMP = METRE * 1500;
-//number of layers
-var LAYER_COUNT = 3;
+//number of *visible* layers
+var LAYER_COUNT = 5; //SET BACK TO 3 WHEN ENEMIES SPAWN
 //setting variable values to each collision state
 var LAYER_BACKGROUND = 0; //0 = no collision
 var LAYER_PLATFORMS = 1; //1 = collision with a platform
@@ -59,7 +59,9 @@ var reset_timer = 3;
 //Score counter
 var score = 0;
 //Setting player life
-var player_hp = 100;
+var player_hp = 200;
+//Kill counter
+var kills = 0;
 //Damage Cooldown
 var damageCooldown = 2;
 //Player Lives

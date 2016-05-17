@@ -45,6 +45,8 @@ var chuckNorris = document.createElement("img");
 chuckNorris.src = "hero.png";
 
 var player = new Player();
+var HpHud = new HpHud();
+var KillCounter = new KillCounter();
 var keyboard = new Keyboard();
 
 var tileset = document.createElement("img");
@@ -113,12 +115,14 @@ function runGameplay(deltaTime)
 {
     
     player.update(deltaTime);
+    KillCounter.update(deltaTime)
     DrawLives();
     drawMap();
     player.draw();
     DrawScore();
+    HpHud.draw();
     DrawHPCounter();
-    // KillCounter.prototype.draw();
+    KillCounter.draw();
     RunBulletChecks(deltaTime);
     
     //Debug Keys
@@ -168,25 +172,17 @@ function runGameplay(deltaTime)
         }
     }
     
-    switch(Playerstate)
-    {
-        case Playerstate_RunJump:
-            player.updateRunJumpState();
-            break;
-        case Playerstate_Climb:
-            player.updateClimbState();
-            break;
-    }
+    // switch(Playerstate)
+    // {
+    //     case Playerstate_RunJump:
+    //         player.updateRunJumpState();
+    //         break;
+    //     case Playerstate_Climb:
+    //         player.updateClimbState();
+    //         break;
+    // }
     
 }
-// function PlayerUpdateRunJumpState()
-// {
-    
-// }
-// function Playerstate_Climb()
-// {
-    
-// }
 
 
 function runGamevalreset(deltaTime)
@@ -196,7 +192,7 @@ function runGamevalreset(deltaTime)
     reset_timer = 3;
     Cheat = false;
     win = false;
-    player_hp = 100;
+    player_hp = 200;
     lives = 3;
     Gamestate = Gamestate_reset;
     player.position.Set(80, 350);
@@ -218,7 +214,7 @@ function runGamedeath(deltaTime)
     if(keyboard.isKeyDown(keyboard.KEY_R) == true)
     {
         lives -= 1;
-        player_hp = 100;
+        player_hp = 200;
         player.position.Set(80, 350);
         Gamestate = Gamestate_play;
     }
@@ -273,11 +269,15 @@ function runGamereset(deltaTime)
     
     context.fillStyle = "#ffffff";
     context.font = "14px Arial";
-    context.fillText("Climbing Controls: Up Arrow Key", 100, 400)
+    context.fillText("Climbing Controls: Up and Down Arrow Keys", 100, 400)
     
     context.fillStyle = "#ffffff";
     context.font = "14px Arial";
     context.fillText("Shooting Controls: Shift Key", 100, 450)
+    
+    context.fillStyle = "#ffffff";
+    context.font = "14px Arial";
+    context.fillText("Jumping Controls: Spacebar", 100, 500)
     
     //Insert some sort of background here
     
@@ -379,6 +379,7 @@ function RunBulletChecks(deltaTime)
                 hit = true;
                 //add kill to score/kill counter
                 score += 100;
+                kills += 1;
                 break;
             }
         }

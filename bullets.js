@@ -38,6 +38,6 @@ Bullet.prototype.draw = function()
     context.save();
         context.drawImage(this.image, screenX, this.position.y);
     context.restore();
-    console.log(this.position)
+    // console.log(this.position)
     // console.log(this.velocity.x)
 }
