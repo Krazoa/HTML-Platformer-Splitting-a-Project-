@@ -29,7 +29,7 @@ var FRICTION = MAXDX * 6;
 //jump distance at which the player jumps at (bunny hopping??)
 var JUMP = METRE * 1500;
 //number of *visible* layers
-var LAYER_COUNT = 5; //SET BACK TO 3 WHEN ENEMIES SPAWN
+var LAYER_COUNT = 3; //SET BACK TO 3 WHEN ENEMIES SPAWN
 //setting variable values to each collision state
 var LAYER_BACKGROUND = 0; //0 = no collision
 var LAYER_PLATFORMS = 1; //1 = collision with a platform
@@ -50,6 +50,7 @@ var Gamestate_reset = 3;
 var Gamestate_resetvalues = 4;
 var Gamestate_win = 5;
 var Gamestate_death = 6;
+var Gamestate_reintial = 7;
 //Defult Start Game State
 var Gamestate = Gamestate_splash;
 //Splash Timer
@@ -65,7 +66,8 @@ var kills = 0;
 //Damage Cooldown
 var damageCooldown = 2;
 //Player Lives
-var lives = 2;
+var lives = 3;
+var life = [];
 //Misc Key Values
 var Enterstate = false;
 //Debug Key Values

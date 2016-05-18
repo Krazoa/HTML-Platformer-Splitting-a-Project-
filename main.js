@@ -45,8 +45,14 @@ var chuckNorris = document.createElement("img");
 chuckNorris.src = "hero.png";
 
 var player = new Player();
+var splash = new Splash();
+var Chuck = new Chuck();
 var HpHud = new HpHud();
+var ScoreHud = new ScoreHud();
 var KillCounter = new KillCounter();
+var Background = new Background();
+var Treeline = new Treeline();
+var lifeIcon = new lifeIcon();
 var keyboard = new Keyboard();
 
 var tileset = document.createElement("img");
@@ -97,14 +103,18 @@ function runGamesplash(deltaTime)
 {
     Splash_timer -=deltaTime
     
+    splash.draw();
+    Chuck.update(deltaTime);
+    Chuck.draw();
+    
     //Setting name
     context.fillStyle = "#ffffff";
     context.font= "12px Arial";
     context.fillText("AIE Project by Michele A.", 2, SCREEN_HEIGHT - 2)
     
     context.fillStyle = "#ffffff";
-    context.font = "25px Arial";
-    context.fillText("Pretend you see a splash image here :)", SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
+    context.font = "60px Agency FB";
+    context.fillText("Chuck Productions", SCREEN_WIDTH/2 - 190, SCREEN_HEIGHT/2)
     
     if(Splash_timer <= 0)
     {
@@ -113,17 +123,22 @@ function runGamesplash(deltaTime)
 }
 function runGameplay(deltaTime)
 {
-    
+    Background.draw();
+    Treeline.draw();
     player.update(deltaTime);
-    KillCounter.update(deltaTime)
-    DrawLives();
+    KillCounter.update(deltaTime);
+    // DrawLives();
     drawMap();
     player.draw();
-    DrawScore();
     HpHud.draw();
+    ScoreHud.draw();
+    DrawScore();
     DrawHPCounter();
     KillCounter.draw();
+    lifeIcon.update(deltaTime);
+    lifeIcon.draw();
     RunBulletChecks(deltaTime);
+    
     
     //Debug Keys
     if(keyboard.isKeyDown(keyboard.KEY_A) == true)
@@ -147,10 +162,24 @@ function runGameplay(deltaTime)
         player_hp -= 1;
     }
     
+    damageCooldown -=deltaTime;
+    
     // //Add enemies
     for(var i=0; i<enemies.length; i++)
     {
         enemies[i].update(deltaTime);
+        if(player.isAlive == true)
+        {
+           if(intersects(player.position.x, player.position.y, TILE, TILE, enemies[i].position.x, enemies[i].position.y, TILE, TILE) == true) 
+           {
+               if(damageCooldown <= 2)
+               {
+                    player_hp -=40
+                    damageCooldown = 2
+               }
+           }
+        }
+        enemies[i].draw();
     }
     
     if(player.position.y > SCREEN_HEIGHT + 100)
@@ -160,7 +189,7 @@ function runGameplay(deltaTime)
     
     if(player_hp <= 0)
     {
-        if(lives == 0)
+        if(lives == 1)
         {
             sfxPlayerDie.play();
             // console.log("Player died")
@@ -194,6 +223,7 @@ function runGamevalreset(deltaTime)
     win = false;
     player_hp = 200;
     lives = 3;
+    score = 0;
     Gamestate = Gamestate_reset;
     player.position.Set(80, 350);
     bullets.splice(0, bullets.length);
@@ -203,6 +233,8 @@ function runGamevalreset(deltaTime)
 function runGamedeath(deltaTime)
 {
     // console.log(lives)
+    Background.draw();
+    Treeline.draw();
     drawMap();
     context.fillStyle = "#ff0000";
     context.font = "80px Arial";
@@ -219,9 +251,16 @@ function runGamedeath(deltaTime)
         Gamestate = Gamestate_play;
     }
 }
+function runGameReIntial(deltaTime)
+{
+    initialize();
+    Gamestate = Gamestate_resetvalues;
+}
 
 function runGameWin(deltaTime)
 {
+    Background.draw();
+    Treeline.draw();
     Enterstate = false;
     context.fillStyle = "#ffffff";
     context.font = "26px Arial";
@@ -236,12 +275,14 @@ function runGameWin(deltaTime)
     context.fillText("Press R to go back to restart.", 100, SCREEN_HEIGHT/2 + 50)
     if(keyboard.isKeyDown(keyboard.KEY_R) == true)
     {
-        Gamestate = Gamestate_resetvalues;
+        Gamestate = Gamestate_reintial;
     }
 }
 
 function runGameover(deltaTime)
 {
+    Background.draw();
+    Treeline.draw();
     Enterstate = false;
     context.fillStyle = "#ffffff";
     context.font = "25px Arial";
@@ -258,7 +299,8 @@ function runGameover(deltaTime)
 }
 function runGamereset(deltaTime)
 {
-    
+    Background.draw();
+    Treeline.draw();
     context.fillStyle = "#ffffff";
     context.font = "18px Arial";
     context.fillText("In the year 30XX, Chuck Norris decides to go on another pointless rampage...", 100, 200)
@@ -278,8 +320,6 @@ function runGamereset(deltaTime)
     context.fillStyle = "#ffffff";
     context.font = "14px Arial";
     context.fillText("Jumping Controls: Spacebar", 100, 500)
-    
-    //Insert some sort of background here
     
     context.fillStyle = "#ffffff";
     context.font = "25px Arial";
@@ -551,6 +591,9 @@ function run()
             break;
         case Gamestate_death:
             runGamedeath(deltaTime);
+            break;
+        case Gamestate_reintial:
+            runGameReIntial(deltaTime);
             break;
     }
     

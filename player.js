@@ -9,10 +9,10 @@ var ANIM_WALK_LEFT = 2;
 var ANIM_IDLE_RIGHT = 3;
 var ANIM_JUMP_RIGHT = 4;
 var ANIM_WALK_RIGHT = 5;
-// var ANIM_CLIMB = 6;
-// var ANIM_SHOOT_LEFT = 7;
-// var ANIM_SHOOT_RIGHT = 8;
-var ANIM_MAX = 6;
+var ANIM_CLIMB = 6;//41 - 51
+var ANIM_SHOOT_LEFT = 7; //27 - 40
+var ANIM_SHOOT_RIGHT = 8; //79 - 93
+var ANIM_MAX = 9;
 
 //creating a new function to return the player
 var Player = function()
@@ -26,6 +26,10 @@ var Player = function()
     this.sprite.buildAnimation(12, 8, 165, 126, 0.05, [52, 53, 54, 55, 56, 57, 58, 59]);
     this.sprite.buildAnimation(12, 8, 165, 126, 0.05, [60, 61, 62, 63, 64]);
     this.sprite.buildAnimation(12, 8, 165, 126, 0.05, [65, 66, 67, 68, 69, 71, 72, 73, 74, 75, 76, 77, 78]);
+    
+    this.sprite.buildAnimation(12, 8, 165, 126, 0.05, [41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51]);
+    this.sprite.buildAnimation(12, 8, 165, 126, 0.05, [27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40]);
+    this.sprite.buildAnimation(12, 8, 165, 126, 0.05, [79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93]);
     for(var i=0; i<ANIM_MAX; i++)
     {
         this.sprite.setAnimationOffset(i, -55, -89);
@@ -51,13 +55,12 @@ var Player = function()
     this.velocity.x = 0;
     this.velocity.y = 0;
     
-    this.falling = true;
+    this.falling = false;
     this.jumping = false;
     
     this.direction = RIGHT;
     
     this.cooldownTimer = 0;
-
     this.isAlive = true;
     
     // this.image.src = "hero.png";
@@ -168,13 +171,27 @@ Player.prototype.update = function(deltaTime)
     {
         this.cooldownTimer -= deltaTime;
     }
-    if(keyboard.isKeyDown(keyboard.KEY_SHIFT) == true && this.cooldownTimer <= 0)
+    if(keyboard.isKeyDown(keyboard.KEY_SHIFT) == true)
     {
-        sfxFire.play();
-        this.cooldownTimer = 0.3;
-        // console.log("bullet fired");
-        bullets.push(new Bullet(this.position.x, this.position.y, this.direction));
+        if(this.direction == LEFT && this.sprite.currentAnimation != ANIM_SHOOT_LEFT)
+        {
+            // console.log("gunz abazin' to the left")
+            this.sprite.setAnimation(ANIM_SHOOT_LEFT);
+        }
+        if(this.direction == RIGHT && this.sprite.currentAnimation != ANIM_IDLE_RIGHT)
+        {
+            // console.log("gunz abazin' to the right")
+            this.sprite.setAnimation(ANIM_SHOOT_RIGHT);
+        }
+        if(this.cooldownTimer <= 0)
+        {
+            sfxFire.play();
+            this.cooldownTimer = 0.19;
+            // console.log("bullet fired");
+            bullets.push(new Bullet(this.position.x, this.position.y, this.direction));
+        }
     }
+    
     
     //find players new position and velocity
     this.position.y = Math.floor(this.position.y + (deltaTime * this.velocity.y));
@@ -268,7 +285,7 @@ Player.prototype.update = function(deltaTime)
 Player.prototype.updateClimbState = function(deltaTime)
 // function updateClimbState(deltaTime)
 {
-    console.log("Climb Player State called")
+    // console.log("Climb Player State called")
     var climbUp = false
     var climbDown = false
     var wasMovingUp = false
@@ -276,24 +293,20 @@ Player.prototype.updateClimbState = function(deltaTime)
     
     this.velocity.x = 0; //Clamp x velocity so the player does not walk off a ladder into thin-air
     
-    if(keyboard.isKeyDown(keyboard.KEY_UP) == true)
+    if(keyboard.isKeyDown(keyboard.KEY_UP) == true && this.sprite.currentAnimation != ANIM_CLIMB)
     {
         climbUp = true
         //update sprite //This is only update when the sprite is moving
-        // this.sprite.setAnimation(ANIM_CLIMB);
+        this.sprite.setAnimation(ANIM_CLIMB);
     }
-    else if(keyboard.isKeyDown(keyboard.KEY_UP) == false)
-    {
-        climbUp = false
-    }
-    if(keyboard.isKeyDown(keyboard.KEY_DOWN) == true)
+    if(keyboard.isKeyDown(keyboard.KEY_DOWN) == true && this.sprite.currentAnimation != ANIM_CLIMB)
     {
         climbDown = true
-        // this.sprite.setAnimation(ANIM_CLIMB);
+        this.sprite.setAnimation(ANIM_CLIMB);
     }
-    else if(keyboard.isKeyDown(keyboard.KEY_DOWN) == false)
+    if(keyboard.isKeyDown(keyboard.KEY_DOWN) == false || keyboard.isKeyDown(keyboard.KEY_UP) == false && this.sprite.currentAnimation != ANIM_CLIMB)
     {
-        climbDown = false
+        this.sprite.setAnimation(ANIM_CLIMB);
     }
     
     if(this.velocity.y > 0)
@@ -369,7 +382,7 @@ Player.prototype.updateClimbState = function(deltaTime)
 Player.prototype.updateRunJumpState = function(deltaTime)
 // function updateRunJumpState(deltaTime)
 {
-    console.log("Run & Jump Player State called")
+    // console.log("Run & Jump Player State called")
     if (this.falling == false)
     {
         var tx = pixleToTile(this.position.x);
@@ -390,7 +403,7 @@ Player.prototype.updateRunJumpState = function(deltaTime)
         if(keyboard.isKeyDown(keyboard.KEY_UP) == true)
         {
             Playerstate = Playerstate_Climb;
-            // this.sprite.setAnimation(ANIM_CLIMB);
+            this.sprite.setAnimation(ANIM_CLIMB);
             return;
         }
     }
@@ -401,7 +414,7 @@ Player.prototype.updateRunJumpState = function(deltaTime)
         if(keyboard.isKeyDown(keyboard.KEY_UP) == true)
         {
             Playerstate = Playerstate_Climb;
-            // this.sprite.setAnimation(ANIM_CLIMB);
+            this.sprite.setAnimation(ANIM_CLIMB);
             return;
         }
     }
