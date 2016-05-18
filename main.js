@@ -189,9 +189,9 @@ function runGameplay(deltaTime)
     
     if(player_hp <= 0)
     {
+        sfxPlayerDie.play();
         if(lives == 1)
         {
-            sfxPlayerDie.play();
             // console.log("Player died")
             Gamestate = Gamestate_over;
         }
@@ -229,6 +229,7 @@ function runGamevalreset(deltaTime)
     bullets.splice(0, bullets.length);
     enemies.splice(0, enemies.length);
     player.isAlive = true;
+    addEnemies();
 }
 function runGamedeath(deltaTime)
 {
@@ -243,6 +244,11 @@ function runGamedeath(deltaTime)
     context.fillStyle = "#ff0000";
     context.font = "24px Arial";
     context.fillText("Press 'R' to respawn", 100, 500)
+    bullets.splice(0, bullets.length);
+    enemies.splice(0, enemies.length);
+    addEnemies();
+    player.isAlive = true;
+    score = 0;
     if(keyboard.isKeyDown(keyboard.KEY_R) == true)
     {
         lives -= 1;
@@ -250,12 +256,13 @@ function runGamedeath(deltaTime)
         player.position.Set(80, 350);
         Gamestate = Gamestate_play;
     }
+    
 }
-function runGameReIntial(deltaTime)
-{
-    initialize();
-    Gamestate = Gamestate_resetvalues;
-}
+// function runGameReIntial(deltaTime)
+// {
+//     initialize();
+//     Gamestate = Gamestate_resetvalues;
+// }
 
 function runGameWin(deltaTime)
 {
@@ -275,7 +282,7 @@ function runGameWin(deltaTime)
     context.fillText("Press R to go back to restart.", 100, SCREEN_HEIGHT/2 + 50)
     if(keyboard.isKeyDown(keyboard.KEY_R) == true)
     {
-        Gamestate = Gamestate_reintial;
+        Gamestate = Gamestate_resetvalues;
     }
 }
 
@@ -330,12 +337,35 @@ function runGamereset(deltaTime)
     }
     if(Enterstate == true)
     {
-        reset_timer -= deltaTime;
+        //this is a long and unresonably complex way of doing a single int counter
+        //as rounding to 1 will fix the counter at the single intiger and cause it to freeze
+        var RoundReset_timer = 3;
+        
+        reset_timer -= deltaTime
+        // console.log(reset_timer)
+        
+        if(reset_timer < 3 && reset_timer > 2)
+        {
+            RoundReset_timer = 3;
+        }
+        if(reset_timer < 2 && reset_timer > 1)
+        {
+            RoundReset_timer = 2;
+        }
+        if(reset_timer < 1 && reset_timer > 0)
+        {
+            RoundReset_timer = 1;
+        }
+        if(reset_timer <= 0)
+        {
+            RoundReset_timer = 0;
+        }
+        
         context.fillStyle = "#ffffff";
         context.font = "24px Arial";
-        context.fillText("Prepare for battle in " + reset_timer + " seconds!!!", 100, 300)
+        context.fillText("Prepare for battle in " + RoundReset_timer + " seconds!!!", 100, 300)
     }
-    if(reset_timer <= 0)
+    if(RoundReset_timer <= 0)
     {
         Gamestate = Gamestate_play;
         Enterstate = 0;
@@ -408,6 +438,7 @@ function RunBulletChecks(deltaTime)
         {
             hit = true;
         }
+        
         //else hit = false (In case hit is somehow stuck on true after being triggered)
         
         for(var j=0; j<enemies.length; j++)
@@ -489,22 +520,7 @@ function initialize()
         }
     }
     
-    //adding enemies
-    Idx = 0;
-    for(var y = 0; y < level1.layers[LAYER_OBJECT_ENEMIES].height; y++)
-    {
-        for(var x = 0; x < level1.layers[LAYER_OBJECT_ENEMIES].width; x++)
-        {
-            if(level1.layers[LAYER_OBJECT_ENEMIES].data[Idx] != 0)
-            {
-                var px = tileToPixle(x);
-                var py = tileToPixle(y);
-                var e = new Enemy(px, py);
-                enemies.push(e);
-            }
-            Idx++;
-        }
-    }
+    addEnemies();
     
     musicBackground = new Howl({
             urls: ["background.ogg"],
@@ -533,6 +549,26 @@ function initialize()
     // {
         musicBackground.play();
     // }
+}
+
+function addEnemies()
+{
+    //adding enemies
+    Idx = 0;
+    for(var y = 0; y < level1.layers[LAYER_OBJECT_ENEMIES].height; y++)
+    {
+        for(var x = 0; x < level1.layers[LAYER_OBJECT_ENEMIES].width; x++)
+        {
+            if(level1.layers[LAYER_OBJECT_ENEMIES].data[Idx] != 0)
+            {
+                var px = tileToPixle(x);
+                var py = tileToPixle(y);
+                var e = new Enemy(px, py);
+                enemies.push(e);
+            }
+            Idx++;
+        }
+    }
 }
 
 function DrawLevelCollisionData(tileLayer, colour) {
@@ -592,9 +628,9 @@ function run()
         case Gamestate_death:
             runGamedeath(deltaTime);
             break;
-        case Gamestate_reintial:
-            runGameReIntial(deltaTime);
-            break;
+        // case Gamestate_reintial:
+        //     runGameReIntial(deltaTime);
+        //     break;
     }
     
     //Debug Console Logs

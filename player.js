@@ -173,15 +173,21 @@ Player.prototype.update = function(deltaTime)
     }
     if(keyboard.isKeyDown(keyboard.KEY_SHIFT) == true)
     {
-        if(this.direction == LEFT && this.sprite.currentAnimation != ANIM_SHOOT_LEFT)
+        if(this.direction == LEFT)
         {
-            // console.log("gunz abazin' to the left")
-            this.sprite.setAnimation(ANIM_SHOOT_LEFT);
+            if(this.sprite.currentAnimation != ANIM_SHOOT_LEFT)
+            {
+                // console.log("gunz abazin' to the left")
+                this.sprite.setAnimation(ANIM_SHOOT_LEFT);
+            }
         }
-        if(this.direction == RIGHT && this.sprite.currentAnimation != ANIM_IDLE_RIGHT)
+        if(this.direction == RIGHT)
         {
-            // console.log("gunz abazin' to the right")
-            this.sprite.setAnimation(ANIM_SHOOT_RIGHT);
+            if(this.sprite.currentAnimation != ANIM_SHOOT_RIGHT)
+            {
+                // console.log("gunz abazin' to the right")
+                this.sprite.setAnimation(ANIM_SHOOT_RIGHT);
+            }
         }
         if(this.cooldownTimer <= 0)
         {
@@ -400,7 +406,7 @@ Player.prototype.updateRunJumpState = function(deltaTime)
     // if ((celldown && !cell) || (celldiag && !cellright && ny))//Possible issues===================================================
     if((cell) != 0 || (cellright) != 0)
     {
-        if(keyboard.isKeyDown(keyboard.KEY_UP) == true)
+        if(keyboard.isKeyDown(keyboard.KEY_UP) == true && this.jumping == false && this.falling == false)
         {
             Playerstate = Playerstate_Climb;
             this.sprite.setAnimation(ANIM_CLIMB);
@@ -411,7 +417,7 @@ Player.prototype.updateRunJumpState = function(deltaTime)
     // if ((!celldown && cell) || (!celldiag && cellright && ny))//Possible issues===================================================
     if((celldown) != 0 || (celldiag) != 0)
     {
-        if(keyboard.isKeyDown(keyboard.KEY_UP) == true)
+        if(keyboard.isKeyDown(keyboard.KEY_UP) == true && this.jumping == false && this.falling == false) 
         {
             Playerstate = Playerstate_Climb;
             this.sprite.setAnimation(ANIM_CLIMB);
